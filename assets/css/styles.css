@@ -232,6 +232,15 @@ img {
         border-radius: 1.5rem 1.5rem 0 0;
         transition: 0.3s;
     }
+    .project__container {
+        padding-bottom: 1rem;
+    }
+    .skills__list-3 {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+    .footer__container {
+        justify-items: center;
+    }
 }
 
 .nav__list {
@@ -508,13 +517,11 @@ img {
 
 .skills__list {
     row-gap: 1.5rem;
-    padding-left: 2.7rem;
     grid-template-columns: repeat(2, 1fr);
 }
 
 .skills__list-3 {
     row-gap: 1.5rem;
-    padding-left: 2.7rem;
     grid-template-columns: repeat(4, 1fr);
     justify-items: center;
 }
@@ -1145,6 +1152,9 @@ img {
     .home__button {
         font-size: 20px;
     }
+    .project__container {
+        padding-bottom: 1rem;
+    }
     .skills__title {
         font-size: var(--normal-font-size);
     }
@@ -1192,6 +1202,9 @@ img {
     .home__img {
         order: 1;
         justify-self: center;
+    }
+    .project__container {
+        padding-bottom: 1rem;
     }
     .about__container,
     .skills_container,
@@ -1317,7 +1330,7 @@ img {
         .project__container {
             background-color: var(--first-color-second);
             border-radius: 1rem;
-            padding: 3rem 2.5rem 0;
+            padding: 3rem 2.5rem 1rem;
             grid-template-columns: 1fr max-content;
             column-gap: 3rem;
         }
