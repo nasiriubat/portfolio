@@ -1403,3 +1403,10 @@ img {
         grid-template-columns: repeat(2, 1fr);
     }
 }
+
+.visitCount {
+    margin-bottom: 1rem;
+    background-color: var(--first-color);
+    color: white;
+    display: inline-block;
+}
