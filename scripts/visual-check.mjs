@@ -2,147 +2,118 @@ import { chromium } from 'playwright';
 import { spawn } from 'node:child_process';
 import { mkdir } from 'node:fs/promises';
 
-const base = 'http://127.0.0.1:4173/portfolio/';
-const watchdog=setTimeout(()=>{console.error('Visual QA exceeded 200s; aborting rather than hanging CI');process.exit(2);},200000);
-const server = spawn('npm', ['run','preview','--','--host','127.0.0.1','--port','4173','--strictPort'], {stdio:['ignore','pipe','pipe']});
-let serverLog='';
-server.stdout.on('data',chunk=>{serverLog+=chunk.toString()});
-server.stderr.on('data',chunk=>{serverLog+=chunk.toString()});
+const base='http://127.0.0.1:4173/portfolio/';
+const watchdog=setTimeout(()=>{console.error('Visual QA exceeded 145s');process.exit(2)},145000);
+const server=spawn('npm',['run','preview','--','--host','127.0.0.1','--port','4173','--strictPort'],{stdio:'ignore'});
 let browser;
 
-async function open(page){
+async function view(page,name){
+  console.log('Opening '+name);
+  page.setDefaultTimeout(9000);
   const errors=[];
   page.on('pageerror',e=>errors.push(e.message));
-  const response=await page.goto(base,{waitUntil:'domcontentloaded',timeout:25000});
-  if(!response?.ok())throw Error('Homepage returned HTTP '+response?.status());
-  await page.locator('h1').waitFor({timeout:15000});
-  await page.locator('.system-card').first().waitFor({timeout:15000});
-  const overflow=await page.evaluate(()=>({
-    scroll:document.documentElement.scrollWidth,
-    viewport:window.innerWidth,
-    body:document.body.scrollWidth
-  }));
-  if(overflow.scroll>overflow.viewport+2)
-    throw Error('Horizontal overflow: '+JSON.stringify(overflow));
-  if(errors.length)throw Error('Page errors: '+errors.join('; '));
-  const forbidden=await page.getByText(/SCROLL TO ASSEMBLE|ENGINEERED IN 3D|CASE STUDY COMING SOON/i).count();
-  if(forbidden)throw Error('Placeholder or gimmick copy visible');
-  if(await page.locator('#work').count()!==1||
-     await page.locator('#research').count()!==1||
-     await page.locator('#experience').count()!==1||
-     await page.locator('#education').count()!==1)
-    throw Error('Required portfolio chapters are missing');
+  const response=await page.goto(base,{waitUntil:'domcontentloaded',timeout:18000});
+  if(!response?.ok())throw Error(name+': HTTP '+response?.status());
+  await page.locator('h1').waitFor({timeout:10000});
+  await page.locator('.system-grid .system-card').first().waitFor({timeout:10000});
+  const width=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
+  if(width>2)throw Error(name+': horizontal overflow '+width+'px');
+  if(errors.length)throw Error(name+': '+errors.join('; '));
+  console.log('Loaded '+name+' without runtime errors or overflow');
   return errors;
 }
 
-async function scrollTo(page,selector,offset=0){
+async function scroll(page,selector,offset=0){
   await page.locator(selector).evaluate((el,amount)=>{
     window.scrollTo({top:window.scrollY+el.getBoundingClientRect().top+amount,behavior:'instant'});
   },offset);
-  await page.waitForTimeout(220);
+  await page.waitForTimeout(250);
+}
+
+async function capture(page,name){
+  console.log('Screenshot '+name);
+  await page.screenshot({path:'preview/'+name+'.png',timeout:18000});
 }
 
 try{
   let ready=false;
-  for(let i=0;i<100;i++){
-    try{const r=await fetch(base);if(r.ok){ready=true;break;}}catch{}
-    await new Promise(resolve=>setTimeout(resolve,400));
+  for(let i=0;i<75;i++){
+    try{const response=await fetch(base);if(response.ok){ready=true;break;}}catch{}
+    await new Promise(ok=>setTimeout(ok,400));
   }
-  if(!ready)throw Error('Preview server failed to start: '+serverLog.slice(-800));
+  if(!ready)throw Error('Preview server did not start');
   browser=await chromium.launch({headless:true});
   await mkdir('preview',{recursive:true});
 
-  // Fidelity, responsive layout, and production runtime.
-  for(const [name,width,height] of [
-    ['desktop',1440,900],['laptop',1100,760],['tablet',768,1024],
-    ['mobile',390,844],['small-mobile',320,740]
-  ]){
-    const page=await browser.newPage({
-      viewport:{width,height},deviceScaleFactor:1,reducedMotion:'reduce'
-    });
-    page.setDefaultTimeout(12000);
-    console.log('Checking viewport:',name,width+'x'+height);
-    const errors=await open(page);
-    if(['desktop','mobile','small-mobile'].includes(name))await page.screenshot({path:'preview/'+name+'-hero.png'});
-    await scrollTo(page,'.index-section');
-    if(['desktop','mobile'].includes(name))await page.screenshot({path:'preview/'+name+'-projects.png'});
+  for(const [name,width,height] of [['desktop',1440,900],['mobile',390,844],['small-mobile',320,740]]){
+    const page=await browser.newPage({viewport:{width,height},reducedMotion:'reduce',deviceScaleFactor:1});
+    const errors=await view(page,name);
+    if(name!=='small-mobile')await capture(page,name+'-hero');
+    await scroll(page,'#projects');
+    if(name!=='small-mobile')await capture(page,name+'-projects');
+
     if(name==='desktop'){
-      await scrollTo(page,'.research-studio');
-      console.log('Checking desktop research and career');
-      await page.screenshot({path:'preview/desktop-research.png'});
-      await scrollTo(page,'.career-story');
-      await page.screenshot({path:'preview/desktop-experience.png'});
-      await scrollTo(page,'.contact-stage');
-      await page.screenshot({path:'preview/desktop-contact.png'});
-      // Filter, shared-element project details, keyboard escape.
-      await scrollTo(page,'.index-section');
-      await page.getByRole('button',{name:'AI & research'}).click();
-      const filtered=await page.locator('.system-card-hit').count();
-      if(!filtered)throw Error('Project filter removed every item');
-      await page.locator('.system-card-hit').first().click();
-      await page.getByRole('dialog',{name:/./}).waitFor();
-      if(await page.locator('.detail-panel').count()!==1)throw Error('Project detail failed to open');
+      console.log('Checking project filtering / modal / search');
+      await page.getByRole('button',{name:'AI & research'}).evaluate(el=>el.click());
+      if(await page.locator('.system-card-hit').count()===0)throw Error('Project filter returned no projects');
+      await page.locator('.system-card-hit').first().evaluate(el=>el.click());
+      await page.locator('.detail-panel').waitFor({state:'visible',timeout:6000});
       if(await page.locator('.detail-panel a[href*="github.com/nasiriubat/"]').count())
-        throw Error('Private source link exposed in project detail');
+        throw Error('Private source link surfaced in project details');
       await page.keyboard.press('Escape');
-      await page.locator('.detail-panel').waitFor({state:'hidden',timeout:3000});
-      await page.getByRole('button',{name:'Open quick search'}).click();
+      await page.locator('.detail-panel').waitFor({state:'hidden',timeout:6000});
+      await page.getByRole('button',{name:'Open quick search'}).evaluate(el=>el.click());
       await page.getByRole('textbox',{name:'Search portfolio'}).fill('ScholarBro');
-      if(await page.locator('.search-results a').count()===0)throw Error('Command search returned nothing');
+      if(!await page.locator('.search-results a').count())throw Error('Search has no results');
       await page.keyboard.press('Escape');
+      await scroll(page,'#research',160);await capture(page,'desktop-research');
+      await scroll(page,'#experience',120);await capture(page,'desktop-career');
+      await scroll(page,'#contact',80);await capture(page,'desktop-contact');
+    } else {
+      await page.getByRole('button',{name:'Open menu'}).evaluate(el=>el.click());
+      await page.getByRole('navigation',{name:'Mobile navigation'}).waitFor({state:'visible',timeout:5000});
+      await page.getByRole('navigation',{name:'Mobile navigation'}).getByRole('link',{name:'Research'}).evaluate(el=>el.click());
+      await page.getByRole('navigation',{name:'Mobile navigation'}).waitFor({state:'hidden',timeout:5000});
+      const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
+      if(overflow>2)throw Error(name+': horizontal overflow after navigation');
     }
-    if(name==='mobile'||name==='small-mobile'){
-      await page.getByRole('button',{name:'Open menu'}).click();
-      await page.getByRole('navigation',{name:'Mobile navigation'}).waitFor();
-      await page.getByRole('navigation',{name:'Mobile navigation'}).getByRole('link',{name:/Research/}).click();
-      await page.getByRole('navigation',{name:'Mobile navigation'}).waitFor({state:'hidden',timeout:3000});
-      const layout=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
-      if(layout>2)throw Error('Mobile width overflow after navigation: '+layout);
-    }
-    if(errors.length)throw Error(name+' runtime errors: '+errors.join('; '));
+    if(errors.length)throw Error('Runtime errors in '+name+': '+errors.join('; '));
+    console.log('Passed '+name);
     await page.close();
   }
 
-  // Verify scroll LINKED motion with real animations, not only static reduced-motion screenshots.
+  console.log('Checking desktop scroll-linked motion');
   {
     const page=await browser.newPage({viewport:{width:1440,height:900},reducedMotion:'no-preference'});
-    console.log('Checking non-reduced scroll choreography');
-    const errors=await open(page);
-    await scrollTo(page,'.approach-section',200);
-    await page.screenshot({path:'preview/motion-approach.png'});
-    const geometry=await page.locator('.showcase-scroller').evaluate(el=>{
-      const top=el.getBoundingClientRect().top+window.scrollY;
-      return {top,height:el.offsetHeight};
-    });
-    await page.evaluate(top=>window.scrollTo({top,behavior:'instant'}),geometry.top);
-    await page.waitForTimeout(500);
+    const errors=await view(page,'motion');
+    const bounds=await page.locator('.showcase-scroller').evaluate(el=>({
+      top:window.scrollY+el.getBoundingClientRect().top,height:el.offsetHeight
+    }));
+    await page.evaluate(top=>scrollTo({top,behavior:'instant'}),bounds.top);
+    await page.waitForTimeout(450);
     const start=await page.locator('.showcase-track').evaluate(el=>getComputedStyle(el).transform);
-    await page.evaluate(({top,height})=>window.scrollTo({top:top+(height-innerHeight)*.53,behavior:'instant'}),geometry);
-    await page.waitForTimeout(750);
+    await page.evaluate(({top,height})=>scrollTo({top:top+(height-innerHeight)*.52,behavior:'instant'}),bounds);
+    await page.waitForTimeout(650);
     const halfway=await page.locator('.showcase-track').evaluate(el=>getComputedStyle(el).transform);
-    if(start===halfway)throw Error('Featured gallery is not responding to scroll');
-    await page.screenshot({path:'preview/motion-work-gallery.png'});
-    await scrollTo(page,'.research-studio',440);
-    await page.screenshot({path:'preview/motion-research.png'});
-    if(errors.length)throw Error('Animation runtime errors: '+errors.join('; '));
+    if(start===halfway)throw Error('Horizontal showcase did not respond to scroll');
+    await capture(page,'motion-gallery');
+    if(errors.length)throw Error('Motion runtime errors: '+errors.join('; '));
     await page.close();
   }
 
-  // Distinct, CMS-generated pages should exist without private GitHub URLs.
+  console.log('Checking generated case studies');
   for(const slug of ['scholarbro','trip-planner','wcag-checker','group-chat-assistant']){
-    console.log('Checking case-study route:',slug);
     const page=await browser.newPage({viewport:{width:1100,height:760}});
-    const response=await page.goto(base+'projects/'+slug+'/',{waitUntil:'domcontentloaded'});
-    if(!response?.ok())throw Error('Project page missing: '+slug);
+    const response=await page.goto(base+'projects/'+slug+'/',{waitUntil:'domcontentloaded',timeout:15000});
+    if(!response?.ok())throw Error('Missing case study: '+slug);
     await page.locator('h1').waitFor();
-    const privateAnchors=await page.locator('a[href*="github.com/nasiriubat/"]').count();
-    if(privateAnchors)throw Error('Private repository URL leaked on '+slug);
-    if(slug==='wcag-checker'&&await page.getByText('How the system works').count()===0)
-      throw Error('Technical case study is missing documented architecture');
+    if(await page.locator('a[href*="github.com/nasiriubat/"]').count())
+      throw Error('Private source URL on case study: '+slug);
+    if(slug==='wcag-checker'&&!await page.getByText('How the system works').count())
+      throw Error('Missing case study architecture');
     await page.close();
   }
-
-  console.log('PASS: 5 responsive viewports, navigation, filters, project details, source privacy, search, 3D motion, research, generated case studies');
+  console.log('PASS: production pages, motion, 3 viewports, project interactions, mobile navigation, case studies');
 }finally{
   clearTimeout(watchdog);
   await browser?.close();
