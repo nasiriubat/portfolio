@@ -40,8 +40,7 @@ function Diagram({variant}:{variant:Drawing}) {
     stroke={accent?'#a5c8ff':'#6e91bb'} strokeWidth={accent?2.6:1.25}
     strokeDasharray={accent?undefined:'4 9'}
     initial={reduced?false:{pathLength:0,opacity:.3}}
-    whileInView={reduced?undefined:{pathLength:1,opacity:1}}
-    viewport={{once:true,amount:.05}}
+    animate={{pathLength:1,opacity:1}}
     transition={{duration:1.45,delay:.15+i*.13,ease:'easeInOut'}}
   />;
 
@@ -126,7 +125,7 @@ export default function FeaturedShowcase() {
   const reduced=useReducedMotion();
   const stationary=compact||Boolean(reduced);
   const {scrollYProgress}=useScroll({target:ref,offset:['start start','end end']});
-  const x=useTransform(scrollYProgress,[0,1],['0%','-66.6667%']);
+  const x=useTransform(scrollYProgress,[0,.18,.38,.62,.82,1],['0%','0%','-33.3333%','-33.3333%','-66.6667%','-66.6667%']);
   const match=(slug:string)=>projects.find(p=>p.slug===slug);
   return <section className="selected-work" id="work">
     <div className="shell"><SectionIntro
