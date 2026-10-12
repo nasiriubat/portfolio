@@ -27,7 +27,7 @@ const ease=(v:number)=>{const x=clamp(v);return x*x*(3-2*x)};
 const segment=(p:number,a:number,b:number)=>ease((p-a)/(b-a));
 const mix=(a:number,b:number,t:number)=>a+(b-a)*t;
 
-function StoryBeat({data,progress,reduced}:{data:Chapter;progress:MotionValue<number>;reduced:boolean}) {
+function StoryBeat({data,progress,reduced,ink,accent}:{data:Chapter;progress:MotionValue<number>;reduced:boolean;ink:MotionValue<string>;accent:MotionValue<string>}) {
  const first=data.from===0;
  const TitleTag=first?'h1':'h2';
  const last=data.until===1;
@@ -37,10 +37,10 @@ function StoryBeat({data,progress,reduced}:{data:Chapter;progress:MotionValue<nu
    [first?1:0,1,1,last?1:0]
  );
  const y=useTransform(progress,[Math.max(0,data.from-.07),data.until+.06],[26,-28]);
- return <motion.div className="systems-beat" style={reduced?{opacity:1,y:0}:{opacity,y}}
+ return <motion.div className="systems-beat" style={reduced?{opacity:1,y:0,color:ink}:{opacity,y,color:ink}}
    aria-label={data.eyebrow+': '+data.title+' '+data.highlight}>
    <div className="systems-beat-meta"><span>{data.index}</span><i/>{data.eyebrow}</div>
-   <TitleTag>{data.title}<br/><em>{data.highlight}</em></TitleTag>
+   <TitleTag>{data.title}<br/><motion.em style={{color:accent}}>{data.highlight}</motion.em></TitleTag>
    <p>{data.body}</p>
    {last&&<a href="#work" className="systems-next">Meet the projects <ArrowDownRight size={19}/></a>}
  </motion.div>;
@@ -385,6 +385,13 @@ export default function CinematicSystems(){
  const {scrollYProgress}=useScroll({target:ref,offset:['start start','end end']});
  const phaseProgress=useTransform(scrollYProgress,[0,1],[0,1]);
  const lineScale=useTransform(scrollYProgress,[0,1],[0,1]);
+ // Art-directed scene lighting: warm studio -> midnight architecture -> warm tangible products.
+ const palette=useTransform(scrollYProgress,[0,.17,.32,.73,.89,1],
+   ['#f3ece2','#eee5dd','#0a1725','#0a1725','#e9e7e0','#f3ece2']);
+ const ink=useTransform(scrollYProgress,[0,.18,.33,.71,.88,1],
+   ['#283747','#283747','#edf4fa','#edf4fa','#253847','#253847']);
+ const accent=useTransform(scrollYProgress,[0,.18,.33,.71,.88,1],
+   ['#b45e43','#b45e43','#e4aa8b','#a7ccc0','#ad5f47','#ad5f47']);
  if(reduced||compact){
   return <section ref={ref} className="systems-static" id="approach" aria-label="Engineering and research approach"><span id="start" className="systems-start-anchor"/>
    <div className="systems-static-inner">
@@ -406,11 +413,12 @@ export default function CinematicSystems(){
  }
  return <section className="systems-cinema" id="approach" ref={ref} aria-label="Inside a system: cinematic engineering story"><span id="start" className="systems-start-anchor"/>
   <div className="systems-cinema-sticky">
+   <motion.div className="systems-palette" style={{backgroundColor:palette}} aria-hidden="true"/>
    <div className="systems-noise" aria-hidden="true"/>
    <div className="systems-topline" aria-hidden="true"><span>AN ENGINEER’S STORY</span><span>BUILDING SOFTWARE / STUDYING INTELLIGENCE</span></div>
    <div className="systems-scene"><WebGLSystem progress={phaseProgress} reduced={reduced}/></div>
    <div className="systems-narrative">
-    {chapters.map(beat=><StoryBeat key={beat.index} data={beat} progress={phaseProgress} reduced={reduced}/>)}
+    {chapters.map(beat=><StoryBeat key={beat.index} data={beat} progress={phaseProgress} reduced={reduced} ink={ink} accent={accent}/>)}
    </div>
    <div className="systems-bottomline" aria-hidden="true">
     <span>INTRODUCTION</span><span>QUESTION</span><span>ASSEMBLY</span><span>INTELLIGENCE</span><span>PRODUCTS</span>
