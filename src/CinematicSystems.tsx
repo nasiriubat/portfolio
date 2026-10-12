@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from 'motion/react';
-import { ArrowDownRight, ArrowUpRight, Cpu, Layers3, Network, Boxes } from 'lucide-react';
+import { ArrowDownRight, Cpu, Layers3, Network, Boxes } from 'lucide-react';
+import './cinematic.css';
 
 type Chapter = { index:string; eyebrow:string; title:string; highlight:string; body:string; from:number; until:number };
 const chapters:Chapter[] = [
@@ -331,7 +332,7 @@ export default function CinematicSystems(){
  const phaseProgress=useTransform(scrollYProgress,[0,1],[0,1]);
  const lineScale=useTransform(scrollYProgress,[0,1],[0,1]);
  if(reduced||compact){
-  return <section className="systems-static" id="approach" aria-label="Engineering and research approach"><span id="start" className="systems-start-anchor"/>
+  return <section ref={ref} className="systems-static" id="approach" aria-label="Engineering and research approach"><span id="start" className="systems-start-anchor"/>
    <div className="systems-static-inner">
     <div className="systems-static-header"><span>01 / INSIDE THE WORK</span><h2>From a question<br/>to a working system.</h2>
      <p>I design the layers underneath an experience, evaluate how they behave, and turn them into software people can use.</p></div>
