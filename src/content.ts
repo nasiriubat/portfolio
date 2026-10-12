@@ -8,3 +8,10 @@ const preferred=new Map<string,Project>();
 for(const p of entries){const key=aliases[p.slug]||p.slug;const previous=preferred.get(key);if(!previous||p.description.length>previous.description.length)preferred.set(key,p)}
 export const projects=[...preferred.values()].sort((a,b)=>Number(b.featured)-Number(a.featured)||a.title.localeCompare(b.title));
 export const publications=Object.values(papers).filter(p=>p.title&&p.url);
+
+export function publicLink(project:Project):string|null{
+  try{
+    const url=new URL(project.url);
+    return url.protocol==='https:'&&!url.hostname.endsWith('github.com')?url.href:null;
+  }catch{return null;}
+}
