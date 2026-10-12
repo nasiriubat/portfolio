@@ -67,8 +67,14 @@ for (const file of (await readdir(source)).filter(name => name.endsWith('.json')
   const features = arrayOfStrings(project.features);
   const workflow = arrayOfStrings(project.workflow);
   const technology = arrayOfStrings(project.stack);
-  const link = typeof project.url === 'string' && /^https:\/\//.test(project.url)
-    && !new URL(project.url).hostname.endsWith('github.com') ? project.url : null;
+  const link = (() => {
+    try {
+      const value = new URL(project.url);
+      return value.protocol === 'https:' && !value.hostname.endsWith('github.com') ? value.href : null;
+    } catch {
+      return null;
+    }
+  })();
 
   const sections = [];
   if (features.length) sections.push(section('01', 'CAPABILITIES', 'What I built', renderList(features, 'list')));
