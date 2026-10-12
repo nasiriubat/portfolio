@@ -1,0 +1,28 @@
+media:
+  input: public/images
+  output: /images
+content:
+  - name: projects
+    label: Projects
+    type: collection
+    path: content/projects
+    extension: json
+    format: json
+    fields:
+      - { name: title, label: Title, type: string, required: true }
+      - { name: category, label: Category, type: string }
+      - { name: status, label: Status, type: string }
+      - { name: url, label: Live URL, type: string }
+      - { name: description, label: Description, type: text }
+      - { name: featured, label: Featured, type: boolean }
+  - name: publications
+    label: Publications
+    type: collection
+    path: content/publications
+    extension: json
+    format: json
+    fields:
+      - { name: title, label: Paper title, type: string, required: true }
+      - { name: venue, label: Venue, type: string }
+      - { name: year, label: Year, type: string }
+      - { name: url, label: Paper URL, type: string }
