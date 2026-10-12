@@ -138,3 +138,15 @@
 
 .systems-static-grid{perspective:900px}
 .systems-static-grid>article{transform-origin:bottom center;backface-visibility:hidden}
+
+/* The color story is scroll-linked, not a static dark developer dashboard. */
+.systems-cinema-sticky:before{display:none}
+.systems-palette{position:absolute;inset:0;z-index:0;pointer-events:none}
+.systems-palette:after{content:'';position:absolute;inset:0;pointer-events:none;
+ background:radial-gradient(ellipse at 73% 44%,#8bafa521,transparent 50%),
+ linear-gradient(90deg,#e3cdb914 0%,transparent 65%)}
+.systems-narrative .systems-beat h1,
+.systems-narrative .systems-beat h2{color:inherit}
+.systems-narrative .systems-beat p{color:inherit;opacity:.76}
+.systems-narrative .systems-beat-meta{color:inherit;opacity:.72}
+.systems-narrative .systems-beat-meta span{color:inherit}
