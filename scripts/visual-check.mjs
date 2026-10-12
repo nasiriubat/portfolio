@@ -38,6 +38,7 @@ try {
     await hero.waitFor();
     const captions=await page.getByText(/SCROLL TO ASSEMBLE|ENGINEERED IN 3D/i).count();
     if(captions)throw new Error('Unprofessional technology captions remain in the hero');
+    await page.waitForTimeout(1700); // Capture the settled sculpture, not its entrance sequence.
     await page.screenshot({path:'preview/hero-assembled.png',animations:'disabled'});
     await page.evaluate(()=>scrollTo(0,Math.round(window.innerHeight*.30)));
     await page.waitForTimeout(1100);
