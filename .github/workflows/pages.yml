@@ -35,6 +35,9 @@ jobs:
       - name: Capture desktop/mobile previews and check overflow
         if: github.event_name == 'pull_request'
         run: npm run test:visual
+      - name: Record cinematic browser timeline
+        if: github.event_name == 'pull_request'
+        run: node scripts/record-story.mjs
       - name: Upload visual preview screenshots
         if: always() && github.event_name == 'pull_request'
         uses: actions/upload-artifact@v4

@@ -2,7 +2,7 @@ import {chromium} from 'playwright';
 import {spawn} from 'node:child_process';
 import {mkdir} from 'node:fs/promises';
 const base='http://127.0.0.1:4173/portfolio/';
-const watchdog=setTimeout(()=>{console.error('QA exceeded 160s');process.exit(2)},160000);
+const watchdog=setTimeout(()=>{console.error('QA exceeded 230s');process.exit(2)},230000);
 const server=spawn('npm',['run','preview','--','--host','127.0.0.1','--port','4173','--strictPort'],{stdio:'ignore'});
 let browser;
 const title=(mode)=>mode==='plain'?'Plain portfolio':'Interactive story';
@@ -68,6 +68,11 @@ try{
    if(await page.locator('.plain-job').count()!==4)throw Error('Plain mode missing career entries');
    if(await page.locator('.plain-degree-grid article').count()!==2)throw Error('Plain mode missing education');
    if(await page.locator('.plain-cert-grid>div').count()<6)throw Error('Plain mode missing certifications');
+   if(label==='plain-desktop'||label==='plain-mobile'){
+    for(const name of ['GitHub profile','LinkedIn profile','Send email','ScholarBro research platform','Research and publications']){
+     if(await page.getByRole('link',{name}).count()!==1)throw Error('Missing hero link: '+name);
+    }
+   }
    if(label==='plain-desktop'){
     await jump(page,'#projects');await screenshot(page,'plain-projects');
     await page.getByRole('button',{name:'AI & research'}).click();
@@ -101,22 +106,37 @@ try{
   await page.locator('.story-portfolio').waitFor({state:'visible',timeout:15000});
   console.log('PASS Story↔Plain switch');await page.close();
  }
- // Confirm the real animated scene responds to scrolling.
+ // Verify the object genuinely disassembles and reorganizes across distinct scroll frames.
  {
   const{page,errors}=await open('story',1440,900,false);
-  const items=await page.locator('.studio-floating').count();
-  if(items!==3)throw Error('Story studio has missing project artefacts');
+  await page.waitForTimeout(1000);
+  const canvas=page.locator('.systems-webgl canvas');
+  await canvas.waitFor({state:'visible',timeout:12000});
   const process=page.locator('#approach');
-  const b=await process.evaluate(el=>({top:scrollY+el.getBoundingClientRect().top,height:el.offsetHeight}));
-  await page.evaluate(y=>scrollTo({top:y+20,behavior:'instant'}),b.top);
-  await page.waitForTimeout(220);
-  const s1=await page.locator('.process-story h3').textContent();
-  await page.evaluate(({top,height})=>scrollTo({top:top+height*.78,behavior:'instant'}),b);
-  await page.waitForTimeout(550);
-  const s2=await page.locator('.process-story h3').textContent();
-  if(s1===s2)throw Error('Story process does not respond to scroll');
-  await screenshot(page,'story-mid-chapter');
-  if(errors.length)throw Error('Story animated runtime errors: '+errors.join('; '));
+  const bounds=await process.evaluate(el=>({
+    top:scrollY+el.getBoundingClientRect().top,
+    distance:Math.max(1,el.offsetHeight-innerHeight)
+  }));
+  const keyframes=[
+   [0,'intro',0],
+   [.39,'detach',2],
+   [.63,'architecture',3],
+   [.91,'products',4]
+  ];
+  const screenHashes=[];
+  for(const [fraction,name,activeIndex] of keyframes){
+   await page.evaluate(({top,distance,fraction})=>scrollTo({top:top+distance*fraction,behavior:'instant'}),{...bounds,fraction});
+   await page.waitForTimeout(1100);
+   const card=page.locator('.systems-beat').nth(activeIndex);
+   const opacity=await card.evaluate(el=>Number.parseFloat(getComputedStyle(el).opacity));
+   if(opacity<.53)throw Error(name+' story chapter is hidden, opacity='+opacity);
+   await screenshot(page,'cinematic-'+name);
+   const bytes=await canvas.screenshot({timeout:11000});
+   screenHashes.push(bytes.toString('base64').slice(0,450));
+   console.log('Frame '+name+': visible story opacity '+opacity.toFixed(2)+'; canvas bytes '+bytes.byteLength);
+  }
+  if(new Set(screenHashes).size<3)throw Error('Cinematic scene not visually changing with scroll progress');
+  if(errors.length)throw Error('Cinematic runtime errors: '+errors.join('; '));
   await page.close();
  }
  // Verify live generated case studies and source link privacy.

@@ -3,8 +3,8 @@ import {AnimatePresence,motion,useReducedMotion,useScroll,useSpring,useTransform
 import {ArrowDown,ArrowRight,ArrowUpRight,BookOpen,Check,Code2,ExternalLink,Mail,MapPin,MousePointer2} from 'lucide-react';
 import {projects,publications,publicLink,type Project} from './content';
 import {certifications,education,experience} from './PortfolioData';
-import StoryStudio from './StoryStudio';
-import {ProcessChapter,ProductIllustration,type IllustrationKind} from './StoryNarrative';
+import CinematicSystems from './CinematicSystems';
+import {ProductIllustration,type IllustrationKind} from './StoryNarrative';
 import './story.css';
 
 const featured: {slug:IllustrationKind;title:string;eyebrow:string;lead:string;detail:string;accent:string}[]=[
@@ -27,39 +27,6 @@ function StageLabel({number,text}:{number:string;text:string}){
  return <div className="story-label"><span className="label-number">{number}</span><span className="label-rule"/>{text}</div>;
 }
 
-function Introduction(){
- const reduced=useReducedMotion();
- const ref=useRef<HTMLElement>(null);
- const {scrollYProgress}=useScroll({target:ref,offset:['start start','end start']});
- const textLift=useTransform(scrollYProgress,[0,1],[0,-47]);
- return <section className="story-hero" id="start" ref={ref}>
-  <div className="story-hero-grid"/>
-  <div className="story-hero-inner story-container">
-   <motion.div className="story-hero-copy" style={reduced?undefined:{y:textLift}}>
-    <Reveal><div className="hero-label"><span className="hello-dot"/> FULL-STACK DEVELOPER & AI RESEARCHER <span className="hero-location-small"><MapPin size={13}/> TAMPERE</span></div></Reveal>
-    <h1 className="story-hero-title">
-      {['Hi, I’m','Nasir.'].map((line,i)=><span className="hero-title-window" key={line}>
-       <motion.span initial={reduced?false:{y:'110%',opacity:0}} animate={{y:'0%',opacity:1}}
-        transition={{delay:.13+i*.17,duration:.95,ease:revealEase}} className={i===1?'hero-name-line':''}>{line}</motion.span>
-      </span>)}
-    </h1>
-    <Reveal delay={.22}><p className="hero-main-claim">I turn complex ideas into<br/><strong>useful software.</strong></p></Reveal>
-    <Reveal delay={.32}><p className="hero-intro-text">I build full-stack products and research AI systems at GPT Lab, Tampere University. My work lives somewhere between curiosity, engineering, and making things actually work.</p></Reveal>
-    <Reveal delay={.41}><div className="hero-actions">
-      <a href="#approach" className="story-button story-button-primary">Explore my story <ArrowDown size={18}/></a>
-      <a href={import.meta.env.BASE_URL+'?view=plain'} className="story-subtle-link">Prefer the plain portfolio? <ArrowUpRight size={17}/></a>
-    </div></Reveal>
-    <Reveal delay={.53}><div className="hero-personal-note"><span className="note-squiggle">✳</span><span>4+ years in software engineering. Still finding new things worth building.</span></div></Reveal>
-   </motion.div>
-   <motion.div className="story-hero-art" initial={reduced?false:{opacity:0,scale:.91,x:42}}
-     animate={{opacity:1,scale:1,x:0}} transition={{duration:1.3,delay:.35,ease:revealEase}}>
-     <StoryStudio/>
-   </motion.div>
-  </div>
-  <a href="#approach" className="hero-scroll-prompt"><span>SCROLL TO EXPLORE</span><span className="scroll-prompt-line"/></a>
- </section>;
-}
-
 function ChapterTransition(){
  const ref=useRef<HTMLDivElement>(null);
  const reduced=useReducedMotion();
@@ -69,6 +36,24 @@ function ChapterTransition(){
   <motion.div style={reduced?undefined:{x}}>BUILD <span>✳</span> QUESTION <span>✳</span> RESEARCH <span>✳</span> IMPROVE <span>✳</span> BUILD</motion.div>
  </div>;
 }
+function ScrollProductArt({kind}:{kind:IllustrationKind}){
+ const ref=useRef<HTMLDivElement>(null);
+ const reduced=Boolean(useReducedMotion());
+ const {scrollYProgress}=useScroll({target:ref,offset:['start end','end start']});
+ const zoom=useTransform(scrollYProgress,[0,.45,.78,1],[.78,1.03,1,.88]);
+ const rotation=useTransform(scrollYProgress,[0,.48,1],[12,0,-7]);
+ const offset=useTransform(scrollYProgress,[0,.5,1],[95,0,-64]);
+ const mask=useTransform(scrollYProgress,[0,.4,.72,1],[
+  'inset(12% 12% round 30px)','inset(0% 0% round 24px)',
+  'inset(0% 0% round 24px)','inset(7% 6% round 30px)'
+ ]);
+ return <div className="feature-art-perspective" ref={ref}>
+   <motion.div className="feature-art-wrap" style={reduced?undefined:{scale:zoom,rotateY:rotation,y:offset,clipPath:mask}}>
+      <ProductIllustration kind={kind}/>
+   </motion.div>
+ </div>;
+}
+
 function WorkChapter(){
  const reduced=useReducedMotion();
  return <section className="story-work" id="work">
@@ -93,12 +78,7 @@ function WorkChapter(){
        {p&&publicLink(p)&&<a href={publicLink(p)!} target="_blank" rel="noopener noreferrer" className="feature-live">Visit product ↗</a>}
       </div>
      </Reveal>
-     <motion.div className="feature-art-wrap"
-      initial={reduced?false:{opacity:.65,y:55,scale:.95}}
-      whileInView={reduced?undefined:{opacity:1,y:0,scale:1}}
-      viewport={{once:true,amount:.23}} transition={{duration:1.1,ease:revealEase}}>
-      <ProductIllustration kind={item.slug}/>
-     </motion.div>
+     <ScrollProductArt kind={item.slug}/>
     </div>
    </article>;
   })}</div>
@@ -227,8 +207,7 @@ export default function StoryPortfolio(){
  useEffect(()=>{const id=decodeURIComponent(window.location.hash.slice(1));if(!id)return;
    requestAnimationFrame(()=>document.getElementById(id)?.scrollIntoView({block:'start'}));},[]);
  return <main className="story-portfolio">
-  <Introduction/>
-  <ProcessChapter/>
+  <CinematicSystems/>
   <ChapterTransition/>
   <WorkChapter/>
   <MoreWork/>
