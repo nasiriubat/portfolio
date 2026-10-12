@@ -135,3 +135,6 @@
 .story-root .mobile-links{background:#132434;border-color:#587085;color:#f0f3f6}
 .story-root .mobile-links a{border-bottom-color:#405366}
 .story-root .mobile-mode-note{color:#a7bac9}
+
+.systems-static-grid{perspective:900px}
+.systems-static-grid>article{transform-origin:bottom center;backface-visibility:hidden}
