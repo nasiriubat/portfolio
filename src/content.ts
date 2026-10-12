@@ -1,7 +1,6 @@
-export const projects = [
-  { title: 'ScholarBro', category: 'Research platform', status: 'Live product', url: 'https://scholarbro.com', description: 'Discover research and follow academic interests.', featured: true },
-  { title: 'NextEuroTrip', category: 'Travel technology', status: 'Featured product', url: 'https://nexteurotrip.com', description: 'Explore European destinations and plan personalized journeys.', featured: true },
-  { title: 'Knowlet', category: 'AI application', status: 'Selected work', url: '', description: 'Explore documents and generate multi speaker audio summaries.', featured: false },
-  { title: 'LeaveHub', category: 'SaaS platform', status: 'Selected work', url: '', description: 'Manage leave requests, approvals, and team calendars.', featured: false }
-];
-export const publications: {title:string;venue:string;year:string;url:string}[] = []; // Add verified papers only
+export type Project={title:string;category:string;status:string;url:string;description:string;featured:boolean};
+export type Publication={title:string;venue:string;year:string;url:string};
+const p=import.meta.glob('../content/projects/*.json',{eager:true,import:'default'}) as Record<string,Project>;
+const papers=import.meta.glob('../content/publications/*.json',{eager:true,import:'default'}) as Record<string,Publication>;
+export const projects=Object.values(p);
+export const publications=Object.values(papers).filter(p=>p.title&&p.url);
