@@ -1,4 +1,4 @@
-import React, {useMemo,useState} from 'react';
+import React, {useEffect,useMemo,useState} from 'react';
 import {ArrowDownRight,ArrowRight,ArrowUpRight,ExternalLink,Mail,MapPin} from 'lucide-react';
 import {projects,publications,publicLink,type Project} from './content';
 import {experience,education,certifications,capabilities} from './PortfolioData';
@@ -29,6 +29,8 @@ function PlainCard({p}:{p:Project}){
  </article>;
 }
 export default function PlainPortfolio(){
+ useEffect(()=>{const id=decodeURIComponent(window.location.hash.slice(1));if(!id)return;
+   requestAnimationFrame(()=>document.getElementById(id)?.scrollIntoView({block:'start'}));},[]);
  const [filter,setFilter]=useState<Filter>('All');
  const filtered=useMemo(()=>filter==='All'?projects:projects.filter(p=>classify(p)===filter),[filter]);
  return <main className="plain-portfolio" id="top">
