@@ -1,8 +1,29 @@
 {
   "title": "Deadline District",
   "category": "3D Games · WebGL",
-  "status": "Repository reviewed",
+  "status": "Selected work",
   "url": "https://github.com/nasiriubat/deadline-district",
   "description": "Three.js browser sniper game featuring procedurally seeded city environments, contracts, ballistics, vehicles, weather, customizable mobile controls, optional multiplayer and offline PWA support. Includes simulation tests, Playwright checks and rendering budgets.",
-  "featured": true
+  "featured": true,
+  "features": [
+    "Procedurally seeded three-dimensional environments with contracts and progression",
+    "Ballistics, scoped weapons, vehicle physics, weather and pedestrian simulation",
+    "Optional cooperative multiplayer, mobile controls and offline PWA support",
+    "Automated simulation tests, browser end-to-end checks and rendering performance budgets"
+  ],
+  "workflow": [
+    "Generate a deterministic city, contract and environment",
+    "Run game-state simulation and render with Three.js",
+    "Process player input, scoring, progression and optional multiplayer state",
+    "Persist progress and export shareable gameplay highlights"
+  ],
+  "stack": [
+    "Three.js",
+    "WebGL",
+    "TypeScript",
+    "Vite",
+    "Colyseus",
+    "Vitest",
+    "Playwright"
+  ]
 }
