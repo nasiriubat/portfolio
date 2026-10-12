@@ -20,9 +20,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: npm
-          cache-dependency-path: package-lock.json
-      - run: npm ci
+      - run: npm install
       - run: npm run build
       - name: Install browser for visual review
         if: github.event_name == 'pull_request'
