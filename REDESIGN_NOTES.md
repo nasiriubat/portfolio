@@ -1,8 +1,8 @@
-# Portfolio redesign
-This is the development branch for the 2026 portfolio redesign. Do not merge before reviewing mobile layout, real product screenshots, publication data, canonical URL, GitHub Pages deployment settings, and production build.
+# Portfolio redesign review
+The branch is deliberately not deployed to production. The GitHub Actions PR build verifies TypeScript/Vite, captures desktop/mobile screenshots, checks horizontal overflow, verifies command search and both static case studies.
 
-## Current stage
-React + TypeScript + Motion starter with featured ScholarBro and NextEuroTrip, responsive layout, command palette, scroll progress, scroll reveals, project card hover effects, and reduced motion support.
+## Preview
+Open the latest GitHub Actions run for the draft PR and download the `portfolio-visual-preview` artifact to view desktop.png, mobile.png and small-mobile.png.
 
-## Remaining
-Real product screenshots and case studies; verified publication records; actual magnetic button and pointer spotlight implementations; page routing/transitions; static prerendering and sitemap; CMS decision and setup; automated accessibility and browser tests; custom domain review.
+## Before approval
+Review actual screenshots and replace placeholder product illustrations with verified product screenshots. Add publication records only after confirming paper titles, venue, status and links. Review project descriptions, domain/canonical configuration, accessibility, Lighthouse performance and SEO before merging. This is not a production-ready sign-off.
