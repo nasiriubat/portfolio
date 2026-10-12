@@ -54,7 +54,7 @@ export default function CinematicAssembly(){
    const phase=reduce?1:smoothed;const explosion=reduce?0:Math.max(0,1-Math.min(1,Math.max(0,(phase-.12)/.65)));
    for(const p of parts){p.mesh.position.copy(p.origin).addScaledVector(p.offset,explosion);p.mesh.rotation.set(p.spin.x*explosion,p.spin.y*explosion,p.spin.z*explosion)}
    world.rotation.y=(reduce?-.18:(phase-.5)*.5);world.rotation.x=(reduce?-.12:(.5-phase)*.18);
-   world.scale.setScalar(element.clientWidth<500?.7:.94);
+   world.scale.setScalar(host.current?.clientWidth && host.current.clientWidth<500?.7:.94);
    grid.material instanceof THREE.Material&&(grid.material.opacity=.17);
    renderer.render(scene,camera);
   }
