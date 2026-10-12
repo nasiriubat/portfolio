@@ -535,3 +535,8 @@ section[id]{scroll-margin-top:110px}
   .showcase-scroller .feature-panel{width:100%;height:auto;min-height:650px;grid-template-columns:1fr 1fr}
   .side-progress,.type-band{display:none}
 }
+
+/* The long travel product name stays on one typographic line on large screens. */
+.feature-panel:nth-child(2) .feature-wordmark{font-size:clamp(44px,4.4vw,77px);letter-spacing:-.075em}
+@media(max-width:900px){.feature-panel:nth-child(2) .feature-wordmark{font-size:clamp(40px,6.7vw,68px)}}
+@media(max-width:680px){.feature-panel:nth-child(2) .feature-wordmark{font-size:clamp(31px,8vw,53px)}}
