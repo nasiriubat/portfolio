@@ -30,14 +30,13 @@ export default function StoryStudio(){
     <div className="studio-monitor-top"><span className="studio-monitor-dots"><i/><i/><i/></span><span>workspace / agent-lab</span><span>↗</span></div>
     <div className="studio-code">
       <div className="studio-filetitle"><span className="code-language">TS</span> workflow.ts <span className="studio-file-tag">prototype</span></div>
-      <div className="studio-line"><small>01</small><code><b>async</b> function build<span className="code-orange">UsefulSystems</span>() {'{'}</code></div>
-      <div className="studio-line"><small>02</small><code>&nbsp; <span className="code-muted">const</span> input = <span className="code-blue">understandProblem</span>();</code></div>
-      <div className="studio-line"><small>03</small><code>&nbsp; <span className="code-muted">const</span> design = <span className="code-blue">connectThePieces</span>(input);</code></div>
-      <div className="studio-line"><small>04</small><code>&nbsp; <span className="code-muted">const</span> result = <span className="code-blue">shipAndLearn</span>(design);</code></div>
-      <div className="studio-line"><small>05</small><code>&nbsp; <b>return</b> result;</code></div>
-      <div className="studio-line"><small>06</small><code>{'}'}</code></div>
+      <div className="studio-line"><small>01</small><code><b>async</b> function <span className="code-orange">answer</span>(question) {'{'}</code></div>
+      <div className="studio-line"><small>02</small><code>&nbsp; <span className="code-muted">const</span> context = await <span className="code-blue">retrieve</span>(question);</code></div>
+      <div className="studio-line"><small>03</small><code>&nbsp; <span className="code-muted">const</span> draft = await <span className="code-blue">generate</span>(question, context);</code></div>
+      <div className="studio-line"><small>04</small><code>&nbsp; <b>return</b> <span className="code-blue">citeSources</span>(draft, context);</code></div>
+      <div className="studio-line"><small>05</small><code>{'}'}</code></div>
     </div>
-    <div className="studio-monitor-bottom"><span><i/> Working on what matters</span><span>CODE · RESEARCH · PRODUCTS</span></div>
+    <div className="studio-monitor-bottom"><span><i/> Retrieval · context · citations</span><span>CODE · RESEARCH · PRODUCTS</span></div>
     <div className="studio-monitor-stand" aria-hidden="true"/>
    </motion.div>
 
