@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from 'motion/react';
-import { ArrowDownRight, Cpu, Layers3, Network, Boxes } from 'lucide-react';
+import { ArrowDownRight, Cpu, Layers3, Network, Boxes, PanelsTopLeft } from 'lucide-react';
 import './cinematic.css';
 
 type Chapter = { index:string; eyebrow:string; title:string; highlight:string; body:string; from:number; until:number };
@@ -397,7 +397,7 @@ export default function CinematicSystems(){
       viewport={{once:true,amount:.23}}
       transition={{duration:.66,delay:(i%2)*.08,ease:[.22,1,.36,1]}}>
       <span>{beat.index} / {beat.eyebrow}</span>
-      <div className="static-chapter-icon">{[<Cpu size={27}/>,<Layers3 size={27}/>,<Network size={27}/>,<Boxes size={27}/>][i]}</div>
+      <div className="static-chapter-icon">{[<Cpu size={27}/>,<Layers3 size={27}/>,<Network size={27}/>,<Boxes size={27}/>,<PanelsTopLeft size={27}/>][i]}</div>
       <h3>{beat.title} <em>{beat.highlight}</em></h3><p>{beat.body}</p>
      </motion.article>)}
     </div>
