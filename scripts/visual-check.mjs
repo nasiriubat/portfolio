@@ -52,6 +52,9 @@ try{
    }
    if(label==='story-desktop'){
     await jump(page,'#work');await screenshot(page,'story-featured-work');
+    for(const [selector,name] of [['.feature-scholarbro .feature-stage','scholarbro'],['.feature-trip-planner .feature-stage','nexteurotrip'],['.feature-wcag-checker .feature-stage','wcag-checker']]){
+      await jump(page,selector);await screenshot(page,'story-project-'+name);
+    }
     await jump(page,'#research');await screenshot(page,'story-research');
     await jump(page,'#about');await screenshot(page,'story-career');
     await page.getByRole('button',{name:/Show all .* projects/}).evaluate(el=>el.click());
@@ -71,6 +74,10 @@ try{
     if(!await page.locator('.plain-project').count())throw Error('Plain mode filter failed');
    }
   }
+  if(label==='story-mobile'){
+   await jump(page,'.feature-trip-planner .artifact');
+   await screenshot(page,'story-mobile-trip-art');
+  }
   if(width<=390){
    await page.getByRole('button',{name:'Open navigation'}).click();
    await page.getByRole('navigation',{name:'Mobile sections'}).waitFor({state:'visible'});
@@ -83,6 +90,16 @@ try{
   if(errors.length)throw Error(label+' runtime error: '+errors.join('; '));
   console.log('PASS '+label);
   await page.close();
+ }
+ // Verify both mode links navigate to the appropriate experience.
+ {
+  const{page}=await open('story',1100,760);
+  await page.locator('.experience-switch a').filter({hasText:'Plain'}).click();
+  await page.locator('.plain-portfolio').waitFor({state:'visible',timeout:15000});
+  if(!new URL(page.url()).searchParams.has('view')||new URL(page.url()).searchParams.get('view')!=='plain')throw Error('Plain switch URL is wrong');
+  await page.locator('.experience-switch a').filter({hasText:'Story'}).click();
+  await page.locator('.story-portfolio').waitFor({state:'visible',timeout:15000});
+  console.log('PASS Story↔Plain switch');await page.close();
  }
  // Confirm the real animated scene responds to scrolling.
  {
