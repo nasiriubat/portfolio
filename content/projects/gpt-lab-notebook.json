@@ -1,0 +1,8 @@
+{
+  "title": "GPT Lab Notebook",
+  "category": "AI · Knowledge tools",
+  "status": "Repository reviewed",
+  "url": "https://github.com/nasiriubat/notebook",
+  "description": "Multi-notebook research workspace for conversations grounded in uploaded documents, images, text, websites and YouTube sources. Features source selection, chat history, multilingual interactions, JWT-based authentication and responsive light/dark UI. Built with FastAPI, React, SQLAlchemy and PostgreSQL.",
+  "featured": false
+}
