@@ -125,12 +125,30 @@ function WebGLSystem({progress,reduced}:{progress:MotionValue<number>;reduced:bo
   const mesh=(w:number,h:number,d:number,m:THREE.Material)=>{
    const o=new THREE.Mesh(geometry(w,h,d),m);return o;
   };
+  const fragments:{object:THREE.Object3D;anchor:THREE.Vector3;offset:THREE.Vector3;spin:THREE.Vector3}[]=[];
   const screen=new THREE.Group();rig.add(screen);
   const board=mesh(4.28,2.7,.18,dark);board.position.set(0,.4,-.38);screen.add(board);
   const screenGlass=mesh(3.93,2.39,.015,silver);screenGlass.position.set(0,.4,-.265);screen.add(screenGlass);
   const monitorTex=canvasTexture('AGENT LAB','RAG  /  MEMORY  /  EVALUATION','monitor',{base:'#101e32',accent:'#e8af8b'});textures.push(monitorTex);
   const faceMaterial=new THREE.MeshBasicMaterial({map:monitorTex,transparent:false});materials.push(faceMaterial);
-  const monitorFace=new THREE.Mesh(new THREE.PlaneGeometry(3.88,2.34),faceMaterial);geometries.push(monitorFace.geometry);monitorFace.position.set(0,.4,-.247);screen.add(monitorFace);
+  // A continuous textured screen assembled from twelve independently moving tiles.
+  // UVs preserve the single image when assembled; every tile physically separates on scroll.
+  const columns=4,rows=3;
+  for(let row=0;row<rows;row++){for(let col=0;col<columns;col++){
+    const tileGeometry=new THREE.PlaneGeometry(3.88/columns,2.34/rows);
+    geometries.push(tileGeometry);
+    const uv=tileGeometry.getAttribute('uv') as THREE.BufferAttribute;
+    for(let vertex=0;vertex<uv.count;vertex++){
+      uv.setXY(vertex,(col+uv.getX(vertex))/columns,(rows-1-row+uv.getY(vertex))/rows);
+    }
+    uv.needsUpdate=true;
+    const tile=new THREE.Mesh(tileGeometry,faceMaterial);
+    tile.position.set(-1.455+col*.97,1.18-row*.78,-.247);
+    screen.add(tile);
+    fragments.push({object:tile,anchor:tile.position.clone(),
+      offset:new THREE.Vector3((col-1.5)*.75+(row%2?.18:-.18),(1-row)*.65,1.35+(col%2)*.48+(row%2)*.32),
+      spin:new THREE.Vector3((row-1)*.27,(col-1.5)*.3,(col+row)%2?.3:-.3)});
+  }}
   const base=new THREE.Group();base.position.set(0,-1.43,.72);base.rotation.x=-1.08;rig.add(base);
   const keyboard=mesh(4.3,2.35,.13,silver);base.add(keyboard);
   const deck=mesh(4.0,2.05,.03,dark);deck.position.z=.09;base.add(deck);
@@ -138,9 +156,12 @@ function WebGLSystem({progress,reduced}:{progress:MotionValue<number>;reduced:bo
   for(let y=0;y<4;y++){for(let x=0;x<8;x++){
     const key=mesh(.39,.27,.06,(x+y)%10===0?teal:mat(0x374f62,.35,.52));
     key.position.set((x-3.5)*.46,.69-y*.39,.15);base.add(key);keys.push(key);
+    fragments.push({object:key,anchor:key.position.clone(),
+      offset:new THREE.Vector3((x-3.5)*.22, (1.5-y)*.36, 1.1+((x*3+y)%5)*.3),
+      spin:new THREE.Vector3((y-1.5)*.12,(x-3.5)*.13,(x%2===0?.17:-.17))});
   }}
   const touch=mesh(1.14,.43,.02,mat(0x7c8fa0,.28,.49));touch.position.set(0,-.77,.15);base.add(touch);
-  const fragments:{object:THREE.Object3D;anchor:THREE.Vector3;offset:THREE.Vector3;spin:THREE.Vector3}[]=[];
+
   const pieces:[number,number,number,number,number,number,THREE.Material][]=[
    [-2.15,.4,-.22,.13,2.84,.22,silver],[2.15,.4,-.22,.13,2.84,.22,silver],
    [0,1.82,-.22,4.35,.13,.22,silver],[0,-.99,-.22,4.35,.14,.22,silver],
