@@ -1,5 +1,5 @@
 import React, {useEffect,useMemo,useState} from 'react';
-import {ArrowDownRight,ArrowRight,ArrowUpRight,ExternalLink,Mail,MapPin} from 'lucide-react';
+import {ArrowDownRight,ArrowRight,ArrowUpRight,ExternalLink,Mail,MapPin,Linkedin,Github,Globe,BookOpen} from 'lucide-react';
 import {projects,publications,publicLink,type Project} from './content';
 import {experience,education,certifications,capabilities} from './PortfolioData';
 import './plain.css';
@@ -38,6 +38,13 @@ export default function PlainPortfolio(){
    <div className="plain-availability"><span className="plain-availability-dot"/> FULL-STACK SOFTWARE DEVELOPER · AI RESEARCHER</div>
    <div className="plain-hero-body"><div><h1>Nasir Uddin<br/><span>Shuvo.</span></h1>
     <p>Software engineer and researcher at GPT Lab, Tampere University. I build full-stack applications, AI tools and intelligent systems—and work to make them more reliable.</p>
+    <div className="plain-hero-social" role="group" aria-label="Profile and contact links">
+     <a href="https://github.com/nasiriubat" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile"><Github size={19}/><span>GitHub</span></a>
+     <a href="https://www.linkedin.com/in/nasir-shuvo" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile"><Linkedin size={19}/><span>LinkedIn</span></a>
+     <a href="mailto:dev.nasirshuvo@gmail.com" aria-label="Send email"><Mail size={19}/><span>Email</span></a>
+     <a href="https://scholarbro.com" target="_blank" rel="noopener noreferrer" aria-label="ScholarBro research platform"><Globe size={19}/><span>ScholarBro</span></a>
+     <a href="#research" aria-label="Research and publications"><BookOpen size={19}/><span>Research</span></a>
+    </div>
     <div className="plain-actions"><a href="#projects" className="plain-button">View my work <ArrowUpRight size={19}/></a>
       <a className="plain-button-text" href="mailto:dev.nasirshuvo@gmail.com">Get in touch <ArrowUpRight size={18}/></a></div>
    </div><div className="plain-hero-aside"><p>What I work on</p>{capabilities.map(c=><div key={c.number}><strong>{c.title}</strong><small>{c.details}</small></div>)}<span><MapPin size={15}/> Tampere, Finland</span></div></div>
