@@ -1,8 +1,27 @@
 {
   "title": "AI Discovery Platform",
   "category": "AI Agents · Enterprise Discovery",
-  "status": "Repository reviewed",
+  "status": "Selected work",
   "url": "https://github.com/nasiriubat/ai-interview",
   "description": "Two interview workflows uncover organizational pain points and translate ideas into developer-ready specifications. Includes provider-independent interview orchestration, structured decision logs, background workers and an API/web application architecture.",
-  "featured": false
+  "featured": false,
+  "features": [
+    "Interview employees to surface workflow bottlenecks and automation opportunities",
+    "Turn early product ideas into structured developer-ready specifications",
+    "Record decisions, assumptions and implementation requirements",
+    "Separate interview engine, provider integration, API, jobs and web application"
+  ],
+  "workflow": [
+    "Capture the starting problem or idea",
+    "Conduct guided discovery rounds",
+    "Convert answers into requirements and recorded decisions",
+    "Produce a specification suitable for implementation planning"
+  ],
+  "stack": [
+    "TypeScript",
+    "Monorepo",
+    "HTTP API",
+    "SSE",
+    "Background workers"
+  ]
 }
