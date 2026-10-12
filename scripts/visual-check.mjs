@@ -91,7 +91,7 @@ try{
       await page.getByRole('button',{name:'Open menu'}).click();
       await page.getByRole('navigation',{name:'Mobile navigation'}).waitFor();
       await page.getByRole('navigation',{name:'Mobile navigation'}).getByRole('link',{name:/Research/}).click();
-      if(await page.getByRole('navigation',{name:'Mobile navigation'}).count())throw Error('Mobile navigation did not close');
+      await page.getByRole('navigation',{name:'Mobile navigation'}).waitFor({state:'hidden',timeout:3000});
       const layout=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
       if(layout>2)throw Error('Mobile width overflow after navigation: '+layout);
     }
