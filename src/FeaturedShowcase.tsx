@@ -98,7 +98,7 @@ function Diagram({variant}:{variant:Drawing}) {
         <text x="330" y="444" textAnchor="middle" className="diagram-micro">SCAN → PRIORITIZE → REMEDIATE</text>
       </>}
     </svg>
-    <div className="diagram-foot"><span>ENGINEERED SYSTEM / VISUAL STUDY</span><span className="diagram-pulse"><i/> ACTIVE</span></div>
+    <div className="diagram-foot"><span>{variant==='discovery'?'DISCOVER / FOLLOW':variant==='journey'?'PLACES / ROUTES':'AUDIT / IMPROVE'}</span><span className="diagram-pulse"><i/> {variant==='discovery'?'RESEARCH':variant==='journey'?'JOURNEYS':'QUALITY'}</span></div>
   </div>;
 }
 
@@ -133,7 +133,7 @@ export default function FeaturedShowcase() {
       chapter="01" eyebrow="SELECTED WORK" title="A few things I've brought into the world."
       description="From research discovery to trip planning and accessibility—real problems, different domains, deliberate engineering."
     /></div>
-    <Reveal><div className="work-preface shell"><span>THREE SYSTEMS / THREE DIFFERENT PROBLEMS</span><span>← EXPLORE THE SEQUENCE →</span></div></Reveal>
+    <Reveal><div className="work-preface shell"><span>THREE SYSTEMS / THREE DIFFERENT PROBLEMS</span><span>RESEARCH · TRAVEL · ACCESSIBILITY</span></div></Reveal>
     <div ref={ref} className={'showcase-scroller '+(stationary?'showcase-static':'')} data-static={stationary}>
       <div className="showcase-sticky">
         <motion.div className="showcase-track" style={stationary?undefined:{x}}>
