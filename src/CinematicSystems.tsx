@@ -335,7 +335,7 @@ export default function CinematicSystems(){
  if(reduced||compact){
   return <section ref={ref} className="systems-static" id="approach" aria-label="Engineering and research approach"><span id="start" className="systems-start-anchor"/>
    <div className="systems-static-inner">
-    <div className="systems-static-header"><span>01 / INSIDE THE WORK</span><h2>From a question<br/>to a working system.</h2>
+    <div className="systems-static-header"><span>SOFTWARE ENGINEER / AI RESEARCHER</span><h1>Nasir Uddin Shuvo.</h1><h2>From a question<br/>to a working system.</h2>
      <p>I design the layers underneath an experience, evaluate how they behave, and turn them into software people can use.</p></div>
     <div className="systems-static-grid">
      {chapters.map((beat,i)=><article key={beat.index}>
