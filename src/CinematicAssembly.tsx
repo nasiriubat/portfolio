@@ -37,11 +37,12 @@ export default function KineticMonogram() {
     const group = new THREE.Group();
     scene.add(group);
 
-    // A monochrome metal sculpture with a single quiet blue accent.
-    const ink = new THREE.MeshStandardMaterial({ color: 0x232e40, metalness: 0.72, roughness: 0.28 });
-    const silver = new THREE.MeshStandardMaterial({ color: 0x9ba9b9, metalness: 0.8, roughness: 0.24 });
-    const accent = new THREE.MeshStandardMaterial({ color: 0x4d76d5, metalness: 0.65, roughness: 0.25 });
-    const edge = new THREE.LineBasicMaterial({ color: 0xe3edfa, transparent: true, opacity: 0.38 });
+    // Thirteen bevelled sections form three continuous strokes.
+    // They move as a coordinated exploded view, never as random particles.
+    const ink = new THREE.MeshStandardMaterial({ color: 0x27364a, metalness: 0.48, roughness: 0.32 });
+    const silver = new THREE.MeshStandardMaterial({ color: 0x9caabd, metalness: 0.56, roughness: 0.28 });
+    const accent = new THREE.MeshStandardMaterial({ color: 0x5275bd, metalness: 0.4, roughness: 0.34 });
+    const edge = new THREE.LineBasicMaterial({ color: 0xd8e6f4, transparent: true, opacity: 0.35 });
 
     type Segment = {
       object: THREE.Group;
@@ -62,48 +63,62 @@ export default function KineticMonogram() {
         const t = (index + 0.5) / count;
         const x = x1 + dx * t;
         const y = y1 + dy * t;
-        const itemIndex = segments.length;
-        const face = stroke === 1 && index % 4 === 0 ? accent : itemIndex % 11 === 0 ? silver : ink;
-        const geometry = new THREE.BoxGeometry(pieceLength - 0.028, 0.55, 0.36);
+
+        const shape = new THREE.Shape();
+        const w = pieceLength - 0.018;
+        const h = 0.60;
+        shape.moveTo(-w / 2, -h / 2);
+        shape.lineTo(w / 2, -h / 2);
+        shape.lineTo(w / 2, h / 2);
+        shape.lineTo(-w / 2, h / 2);
+        shape.closePath();
+        const geometry = new THREE.ExtrudeGeometry(shape, {
+          depth: 0.31,
+          steps: 1,
+          bevelEnabled: true,
+          bevelThickness: 0.045,
+          bevelSize: 0.035,
+          bevelSegments: 3
+        });
+        geometry.translate(0, 0, -0.155);
         geometries.push(geometry);
         const object = new THREE.Group();
+        const face = stroke === 1 ? (index === 2 ? accent : silver) : ink;
         const mesh = new THREE.Mesh(geometry, face);
         mesh.rotation.z = angle;
         object.add(mesh);
 
-        // Selective bright edgework gives the object its machined appearance.
-        if (itemIndex % 5 === 0) {
-          const edgeGeometry = new THREE.EdgesGeometry(geometry);
-          geometries.push(edgeGeometry);
-          const contour = new THREE.LineSegments(edgeGeometry, edge);
-          contour.rotation.z = angle;
-          object.add(contour);
-        }
+        const outlineGeometry = new THREE.EdgesGeometry(geometry, 42);
+        geometries.push(outlineGeometry);
+        const outline = new THREE.LineSegments(outlineGeometry, edge);
+        outline.rotation.z = angle;
+        object.add(outline);
         group.add(object);
 
-        const angleAround = (itemIndex * 2.399963229728653) % (Math.PI * 2);
-        const outward = 1.35 + (itemIndex % 7) * 0.22;
+        // The columns part to either side while the central structural
+        // brace moves forward, like an architectural exploded drawing.
+        const delta = index - (count - 1) / 2;
+        const side = stroke === 0 ? -1 : stroke === 2 ? 1 : 0;
         segments.push({
           object,
-          anchor: new THREE.Vector3(x, y, stroke === 1 ? 0.10 : -0.06),
+          anchor: new THREE.Vector3(x, y, stroke === 1 ? 0.22 : -0.06),
           separation: new THREE.Vector3(
-            Math.cos(angleAround) * outward + x * 0.33,
-            Math.sin(angleAround) * outward + y * 0.26,
-            Math.sin(itemIndex * 0.91) * 1.7
+            side * 1.35 + (stroke === 1 ? delta * 0.22 : 0),
+            delta * 0.23,
+            stroke === 1 ? 1.65 + Math.abs(delta) * 0.10 : -0.7
           ),
           spin: new THREE.Vector3(
-            Math.sin(itemIndex * 1.2) * 0.55,
-            Math.cos(itemIndex * 0.83) * 0.72,
-            Math.sin(itemIndex * 0.47) * 0.36
+            stroke === 1 ? 0.12 : 0,
+            stroke === 1 ? -0.24 : side * 0.16,
+            side * 0.06
           )
         });
       }
     };
 
-    // Three precisely aligned strokes form an N in relief.
-    line(-1.47, -1.76, -1.47, 1.76, 15, 0);
-    line(-1.43, 1.72, 1.43, -1.72, 21, 1);
-    line(1.47, -1.76, 1.47, 1.76, 15, 2);
+    line(-1.40, -1.74, -1.40, 1.74, 4, 0);
+    line(-1.40, 1.65, 1.40, -1.65, 5, 1);
+    line(1.40, -1.74, 1.40, 1.74, 4, 2);
 
     const hemi = new THREE.HemisphereLight(0xffffff, 0x8190ac, 3.1);
     scene.add(hemi);
@@ -173,11 +188,11 @@ export default function KineticMonogram() {
       // The mark is composed on arrival, separates during the scroll,
       // and settles back into alignment before the work section.
       const breakup = reduced ? 0 : Math.sin(Math.PI * smooth((eased - 0.06) / 0.91));
-      const entrance = reduced ? 0 : (1 - smooth((now - entryTime) / 1200));
-      const amount = Math.max(breakup, entrance * 0.65);
+      const entrance = reduced ? 0 : (1 - smooth((now - entryTime) / 1450));
+      const amount = Math.max(breakup, entrance * 0.58);
       for (let i = 0; i < segments.length; i++) {
         const part = segments[i];
-        const delay = (i % 9) * 0.016;
+        const delay = (i % 3) * 0.035;
         const amountPerPart = smooth((amount - delay) / (1 - delay));
         part.object.position.copy(part.anchor).addScaledVector(part.separation, amountPerPart);
         part.object.rotation.set(
