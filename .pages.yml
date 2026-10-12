@@ -17,6 +17,18 @@ content:
       - { name: url, label: Live URL, type: string }
       - { name: description, label: Description, type: text }
       - { name: featured, label: Featured, type: boolean }
+      - name: features
+        label: Key capabilities
+        type: string
+        list: true
+      - name: workflow
+        label: Architecture stages
+        type: string
+        list: true
+      - name: stack
+        label: Core technologies
+        type: string
+        list: true
   - name: publications
     label: Publications
     type: collection
