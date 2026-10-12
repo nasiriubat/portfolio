@@ -10,8 +10,9 @@ export default function KineticMonogram() {
   const holder = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const element = holder.current;
-    if (!element) return;
+    const attached = holder.current;
+    if (!attached) return;
+    const element: HTMLDivElement = attached;
 
     const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
     const reduced = motionPreference.matches;
