@@ -5,26 +5,21 @@ import { ArrowDownRight, ArrowUpRight, Cpu, Layers3, Network, Boxes } from 'luci
 
 type Chapter = { index:string; eyebrow:string; title:string; highlight:string; body:string; from:number; until:number };
 const chapters:Chapter[] = [
-  {
-    index:'01',eyebrow:'THE STARTING POINT',title:'Every system starts',highlight:'with a question.',
-    body:'Before the architecture, before the tools, there is a problem worth understanding.',
-    from:0,until:.22
-  },
-  {
-    index:'02',eyebrow:'BENEATH THE INTERFACE',title:'Pull it apart.',highlight:'Understand every layer.',
-    body:'A working product is not a screen. It is a set of decisions, dependencies and pieces that need to fit.',
-    from:.22,until:.45
-  },
-  {
-    index:'03',eyebrow:'INTELLIGENCE, ENGINEERED',title:'Memory. Retrieval.',highlight:'Reasoning. Evidence.',
-    body:'My work connects the layers of AI systems—and tests whether they behave reliably outside a demo.',
-    from:.45,until:.73
-  },
-  {
-    index:'04',eyebrow:'IN THE REAL WORLD',title:'Then make it',highlight:'useful.',
-    body:'Research tools. Travel products. Accessibility software. Different problems; one commitment to shipping.',
-    from:.73,until:1
-  }
+  {index:'00',eyebrow:'SOFTWARE ENGINEER / AI RESEARCHER',title:'Nasir Uddin',highlight:'Shuvo.',
+   body:'I build useful software and investigate the systems behind intelligent applications. Explore what happens beneath the interface.',
+   from:0,until:.18},
+  {index:'01',eyebrow:'THE STARTING POINT',title:'Every system begins',highlight:'with a question.',
+   body:'Before the architecture comes a problem worth understanding. That is where the work starts.',
+   from:.18,until:.34},
+  {index:'02',eyebrow:'BENEATH THE INTERFACE',title:'Now take it apart.',highlight:'Every layer matters.',
+   body:'A working product is more than its screen: architecture, data, decisions and the seams between them.',
+   from:.34,until:.53},
+  {index:'03',eyebrow:'INTELLIGENCE, ENGINEERED',title:'Memory. Retrieval.',highlight:'Reasoning. Evidence.',
+   body:'I connect the layers of AI systems—and evaluate how reliably they work once the demo ends.',
+   from:.53,until:.76},
+  {index:'04',eyebrow:'IN THE REAL WORLD',title:'Then make it',highlight:'useful.',
+   body:'Research discovery. Journey planning. Accessibility. Different problems, deliberately engineered.',
+   from:.76,until:1}
 ];
 const clamp=(v:number)=>Math.max(0,Math.min(1,v));
 const ease=(v:number)=>{const x=clamp(v);return x*x*(3-2*x)};
@@ -240,11 +235,11 @@ function WebGLSystem({progress,reduced}:{progress:MotionValue<number>;reduced:bo
    const dt=previous?Math.min(.055,(now-previous)/1000):.017;previous=now;
    eased+=((desired-eased)*Math.min(1,dt*8));
    const p=clamp(eased);
-   const explode=segment(p,.14,.38);
-   const laptopExit=segment(p,.36,.56);
-   const pipelineIn=segment(p,.34,.53);
-   const pipelineOut=segment(p,.64,.79);
-   const productIn=segment(p,.7,.91);
+   const explode=segment(p,.27,.48);
+   const laptopExit=segment(p,.46,.62);
+   const pipelineIn=segment(p,.49,.67);
+   const pipelineOut=segment(p,.73,.85);
+   const productIn=segment(p,.79,.95);
    const architecture=pipelineIn*(1-pipelineOut);
    const moduleTargets=targets;
    for(const item of fragments){
@@ -336,7 +331,7 @@ export default function CinematicSystems(){
  const phaseProgress=useTransform(scrollYProgress,[0,1],[0,1]);
  const lineScale=useTransform(scrollYProgress,[0,1],[0,1]);
  if(reduced||compact){
-  return <section className="systems-static" id="approach" aria-label="Engineering and research approach">
+  return <section className="systems-static" id="approach" aria-label="Engineering and research approach"><span id="start" className="systems-start-anchor"/>
    <div className="systems-static-inner">
     <div className="systems-static-header"><span>01 / INSIDE THE WORK</span><h2>From a question<br/>to a working system.</h2>
      <p>I design the layers underneath an experience, evaluate how they behave, and turn them into software people can use.</p></div>
@@ -350,16 +345,16 @@ export default function CinematicSystems(){
    </div>
   </section>;
  }
- return <section className="systems-cinema" id="approach" ref={ref} aria-label="Inside a system: cinematic engineering story">
+ return <section className="systems-cinema" id="approach" ref={ref} aria-label="Inside a system: cinematic engineering story"><span id="start" className="systems-start-anchor"/>
   <div className="systems-cinema-sticky">
    <div className="systems-noise" aria-hidden="true"/>
-   <div className="systems-topline" aria-hidden="true"><span>01 / INSIDE THE WORK</span><span>NASIR UDDIN SHUVO — SOFTWARE & AI SYSTEMS</span></div>
+   <div className="systems-topline" aria-hidden="true"><span>AN ENGINEER’S STORY</span><span>BUILDING SOFTWARE / STUDYING INTELLIGENCE</span></div>
    <div className="systems-scene"><WebGLSystem progress={phaseProgress} reduced={reduced}/></div>
    <div className="systems-narrative">
     {chapters.map(beat=><StoryBeat key={beat.index} data={beat} progress={phaseProgress} reduced={reduced}/>)}
    </div>
    <div className="systems-bottomline" aria-hidden="true">
-    <span>QUESTIONS</span><span>ARCHITECTURE</span><span>INTELLIGENCE</span><span>PRODUCTS</span>
+    <span>INTRODUCTION</span><span>QUESTION</span><span>ASSEMBLY</span><span>INTELLIGENCE</span><span>PRODUCTS</span>
    </div>
    <motion.div className="systems-timeline" style={{scaleX:lineScale}} aria-hidden="true"/>
   </div>
