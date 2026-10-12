@@ -249,7 +249,7 @@ function WebGLSystem({progress,reduced}:{progress:MotionValue<number>;reduced:bo
   let visible=false;
   let running=0;
   let desired=progress.get(),eased=progress.get();
-  let pointerX=0,pointerY=0;
+  let pointerX=0,pointerY=0,renderedPointerX=0,renderedPointerY=0;
   let previous=0;
 
   const resize=()=>{
@@ -271,6 +271,8 @@ function WebGLSystem({progress,reduced}:{progress:MotionValue<number>;reduced:bo
    running=0;if(disposed||document.hidden||!visible)return;
    const dt=previous?Math.min(.055,(now-previous)/1000):.017;previous=now;
    eased+=((desired-eased)*Math.min(1,dt*8));
+   renderedPointerX+=(pointerX-renderedPointerX)*Math.min(1,dt*5);
+   renderedPointerY+=(pointerY-renderedPointerY)*Math.min(1,dt*5);
    const p=clamp(eased);
    const explode=segment(p,.27,.48);
    const laptopExit=segment(p,.46,.62);
@@ -319,14 +321,18 @@ function WebGLSystem({progress,reduced}:{progress:MotionValue<number>;reduced:bo
     frame.rotation.x=-(1-productIn)*.32;
     frame.scale.setScalar(Math.max(.001,productIn*1.31));
    }
-   rig.rotation.set(-.06+Math.sin(p*Math.PI)*.07-pointerY*.035,-.17+Math.sin(p*Math.PI*1.6)*.23+pointerX*.07,Math.sin(p*Math.PI*2)*.025);
+   rig.rotation.set(-.06+Math.sin(p*Math.PI)*.07-renderedPointerY*.035,-.17+Math.sin(p*Math.PI*1.6)*.23+renderedPointerX*.07,Math.sin(p*Math.PI*2)*.025);
    rig.scale.setScalar(element.clientWidth<600?.8:1+architecture*.035);
    camera.position.z=9.38+Math.sin(p*Math.PI)*.18-architecture*.47-productIn*.86;
    camera.position.y=mix(-.12,.1,p);
    camera.lookAt(0,0,0);
    stars.rotation.z=now*.000012;starMat.opacity=.25+architecture*.3;
    renderer.render(scene,camera);
-   if(Math.abs(desired-eased)>.0003||Math.abs(pointerX)>.005||Math.abs(pointerY)>.005||visible){
+   // Stop continuous GPU work once the scroll/pointer pose settles.
+   // Further scroll, pointer movement, resize or visibility events wake it.
+   if(Math.abs(desired-eased)>.00035||
+     Math.abs(pointerX-renderedPointerX)>.00035||
+     Math.abs(pointerY-renderedPointerY)>.00035){
      running=requestAnimationFrame(renderFrame);
    }
   }
