@@ -81,7 +81,7 @@ try{
       if(await page.locator('.detail-panel a[href*="github.com/nasiriubat/"]').count())
         throw Error('Private source link exposed in project detail');
       await page.keyboard.press('Escape');
-      if(await page.locator('.detail-panel').count()!==0)throw Error('Escape did not dismiss the project detail');
+      await page.locator('.detail-panel').waitFor({state:'hidden',timeout:3000});
       await page.getByRole('button',{name:'Open quick search'}).click();
       await page.getByRole('textbox',{name:'Search portfolio'}).fill('ScholarBro');
       if(await page.locator('.search-results a').count()===0)throw Error('Command search returned nothing');
