@@ -519,3 +519,18 @@
  .story-divider>div{transform:none!important}
  .story-hero-copy,.feature-art-wrap{transform:none!important}
 }
+
+/* Product scenes move through depth, instead of using generic fade-up cards. */
+.feature-art-perspective{position:relative;perspective:1250px;min-width:0}
+.feature-art-perspective:before{content:'';position:absolute;inset:9% 10% -7%;border:1px solid #8e8b814d;border-radius:30px;
+ transform:rotate(-4deg);pointer-events:none;opacity:.42}
+.feature-art-perspective .feature-art-wrap{transform-style:preserve-3d;will-change:transform,clip-path}
+.feature-art-perspective .artifact{box-shadow:0 28px 80px #1424322a;transform:translateZ(0)}
+@media(max-width:760px){
+ .feature-art-perspective{perspective:none}
+ .feature-art-perspective:before{display:none}
+ .feature-art-perspective .feature-art-wrap{will-change:auto}
+}
+@media(prefers-reduced-motion:reduce){
+ .feature-art-perspective .feature-art-wrap{transform:none!important;clip-path:none!important}
+}
