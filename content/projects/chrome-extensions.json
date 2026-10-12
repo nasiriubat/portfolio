@@ -1,8 +1,24 @@
 {
-  "title": "Chrome Extensions · Blur-It & Page Reader",
-  "category": "Browser extensions",
-  "status": "Blur-It published · repository reviewed",
+  "title": "Page to Audio — Chrome Extension",
+  "category": "Browser extensions · Accessibility & AI",
+  "status": "Prototype",
   "url": "https://github.com/nasiriubat/chrome-extensions",
-  "description": "Two browser-extension utilities: Blur-It helps obscure credentials and sensitive information visible on webpages, while a companion page-reading extension supports page-level reading workflows. Includes instructions for installing both as unpacked Chromium extensions. Blur-It has also been published to the Chrome Web Store.",
-  "featured": true
+  "description": "A Chromium browser extension that extracts content from the current webpage, processes it with an OpenAI model, and generates audio. Designed around a lightweight browser action, content script and background service worker.",
+  "featured": false,
+  "features": [
+    "Extract page content from the active browser tab",
+    "Process selected page text using an OpenAI API integration",
+    "Generate audio output based on page content"
+  ],
+  "workflow": [
+    "Content script extracts readable page data",
+    "Background service worker coordinates API requests",
+    "Popup and overlay provide page-level interaction"
+  ],
+  "stack": [
+    "Chrome Manifest V3",
+    "JavaScript",
+    "OpenAI API",
+    "Chrome Scripting & Storage APIs"
+  ]
 }
