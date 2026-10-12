@@ -1,8 +1,28 @@
 {
   "title": "RelayDesk — AI Support Platform",
   "category": "Customer Support · SaaS",
-  "status": "Repository reviewed",
+  "status": "Selected work",
   "url": "https://github.com/nasiriubat/ai-ticket",
   "description": "Self-hosted help desk combining live chat, ticket management, knowledge base, AI assistance and customer communication. Designed as a Laravel-based product with installation wizard, support widget, automations, reporting, privacy controls and deployment documentation.",
-  "featured": false
+  "featured": false,
+  "features": [
+    "Self-hosted live chat, support tickets and knowledge base",
+    "Embed chat support into customer websites",
+    "Assist support teams with AI, handoff and automated workflows",
+    "Manage reports, customer records, privacy controls and deployment"
+  ],
+  "workflow": [
+    "Receive a visitor request through chat or support channels",
+    "Search knowledge and offer AI-assisted response",
+    "Route unresolved requests to support agents",
+    "Track communication and reporting"
+  ],
+  "stack": [
+    "PHP",
+    "Laravel",
+    "MySQL",
+    "Pest",
+    "PHPStan",
+    "Docker"
+  ]
 }
