@@ -43,7 +43,7 @@ export default function PlainPortfolio(){
   </section>
 
   <section className="plain-section plain-container" id="projects">
-   <Heading number="01" label="WORK" title="Projects & products." subtitle="A selection of applications, research tools, products, games and extensions. Each project has a case study; private source repositories are not linked."/>
+   <Heading number="01" label="WORK" title="Projects & products." subtitle="Selected applications, AI systems, research tools, games and extensions—each with a closer look at the work behind it."/>
    <div className="plain-filter-row" role="group" aria-label="Project filter">{filters.map(f=><button key={f} type="button" aria-pressed={filter===f} className={filter===f?'active':''} onClick={()=>setFilter(f)}>{f}</button>)}</div>
    <div className="plain-projects">{filtered.map(p=><PlainCard key={p.slug} p={p}/>)}</div>
   </section>
