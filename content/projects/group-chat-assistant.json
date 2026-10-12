@@ -1,0 +1,8 @@
+{
+  "title": "Group Chat Assistant",
+  "category": "AI Agents · Knowledge Retrieval",
+  "status": "Repository reviewed",
+  "url": "https://github.com/nasiriubat/group-chat-assistant",
+  "description": "Multi-channel assistant for WhatsApp, Telegram, Discord and Slack that answers questions from group history with message-level citations. Uses hybrid vector/full-text search, reranking, evolving decision records, configurable LLM providers and per-group privacy, retention and cost controls.",
+  "featured": true
+}
