@@ -1,0 +1,23 @@
+{
+  "title": "Blur-It",
+  "category": "Browser extension · Privacy",
+  "status": "Published on Chrome Web Store",
+  "url": "https://chromewebstore.google.com/detail/blur-it/fiebcidehioanfmpgngimponegaogoel",
+  "description": "A privacy-focused Chrome extension that detects and blurs sensitive content—including API keys, passwords, emails and payment details—before a screen share or recording. Protected content can be revealed temporarily on hover.",
+  "featured": true,
+  "features": [
+    "Automatically identify and blur common credential and personal-information patterns",
+    "Keep sensitive text obscured during live demos and recorded walkthroughs",
+    "Reveal blurred content temporarily when needed"
+  ],
+  "workflow": [
+    "Examine page content locally for sensitive patterns",
+    "Apply blur styling to matching elements",
+    "Temporarily reveal obscured elements on hover"
+  ],
+  "stack": [
+    "JavaScript",
+    "Chrome Extension APIs",
+    "Browser DOM"
+  ]
+}
