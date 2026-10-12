@@ -1,8 +1,27 @@
 {
   "title": "LeaveHub — Leave Management",
   "category": "Business SaaS · HR",
-  "status": "Repository reviewed",
+  "status": "Selected work",
   "url": "https://github.com/nasiriubat/leave-management",
   "description": "Role-aware leave management system with multi-step approvals, transactional balance calculations, accrual and carry-over policies, country holidays, team calendars, reports, 2FA, audit logs and GDPR tools. Built with Laravel, Inertia, React and MySQL.",
-  "featured": true
+  "featured": true,
+  "features": [
+    "Multi-level leave approvals with role-based employee and manager experiences",
+    "Transactional leave balances, accrual, carry-forward and country holiday calculations",
+    "Team calendar, absence reports, exports and personal calendar feeds",
+    "Audit trail, two-factor authentication and GDPR-oriented employee handling"
+  ],
+  "workflow": [
+    "Create request and calculate eligible working days",
+    "Apply leave policy and route through configurable approvals",
+    "Update leave balance transactionally",
+    "Notify stakeholders and expose reports and calendar views"
+  ],
+  "stack": [
+    "Laravel 13",
+    "Inertia",
+    "React",
+    "TypeScript",
+    "MySQL"
+  ]
 }
