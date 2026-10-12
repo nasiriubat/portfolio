@@ -84,7 +84,7 @@ function WorkChapter(){
      <Reveal className="feature-description">
       <div className="feature-kicker"><span>0{i+1} / 03</span><span>{item.eyebrow}</span></div>
       <h3>{item.title}</h3><strong className="feature-lead">{item.lead}</strong>
-      <p>{p?.description||item.detail}</p>
+      <p>{item.detail}</p>
       <div className="feature-chips">
        {(p?.stack||[]).slice(0,3).map(v=><span key={v}>{v}</span>)}
       </div>
@@ -112,7 +112,7 @@ function MoreWork(){
  const shown=expanded?others:others.slice(0,6);
  return <section className="story-project-index story-container" id="projects">
   <Reveal><StageLabel number="02.1" text="OTHER EXPERIMENTS & PRODUCTS"/></Reveal>
-  <Reveal><div className="additional-work-header"><h2>And a few more<br/>things I've made.</h2><p>Software products, agentic systems, internal tools, browser extensions and experiments. No public repository links for private work.</p></div></Reveal>
+  <Reveal><div className="additional-work-header"><h2>And a few more<br/>things I've made.</h2><p>A collection of full-stack builds, agent experiments, developer tools and smaller ideas worth exploring.</p></div></Reveal>
   <motion.div className="additional-project-grid" layout={!reduced}>
    <AnimatePresence initial={false}>{shown.map((p,i)=><motion.article key={p.slug} layout={!reduced}
     initial={reduced?false:{opacity:0,y:30,scale:.97}} animate={{opacity:1,y:0,scale:1}}
