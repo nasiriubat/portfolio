@@ -3,6 +3,7 @@ import { spawn } from 'node:child_process';
 import { mkdir } from 'node:fs/promises';
 
 const base = 'http://127.0.0.1:4173/portfolio/';
+const watchdog=setTimeout(()=>{console.error('Visual QA exceeded 200s; aborting rather than hanging CI');process.exit(2);},200000);
 const server = spawn('npm', ['run','preview','--','--host','127.0.0.1','--port','4173','--strictPort'], {stdio:['ignore','pipe','pipe']});
 let serverLog='';
 server.stdout.on('data',chunk=>{serverLog+=chunk.toString()});
@@ -12,7 +13,7 @@ let browser;
 async function open(page){
   const errors=[];
   page.on('pageerror',e=>errors.push(e.message));
-  const response=await page.goto(base,{waitUntil:'networkidle',timeout:40000});
+  const response=await page.goto(base,{waitUntil:'domcontentloaded',timeout:25000});
   if(!response?.ok())throw Error('Homepage returned HTTP '+response?.status());
   await page.locator('h1').waitFor({timeout:15000});
   await page.locator('.system-card').first().waitFor({timeout:15000});
@@ -38,7 +39,7 @@ async function scrollTo(page,selector,offset=0){
   await page.locator(selector).evaluate((el,amount)=>{
     window.scrollTo({top:window.scrollY+el.getBoundingClientRect().top+amount,behavior:'instant'});
   },offset);
-  await page.waitForTimeout(520);
+  await page.waitForTimeout(220);
 }
 
 try{
@@ -59,17 +60,20 @@ try{
     const page=await browser.newPage({
       viewport:{width,height},deviceScaleFactor:1,reducedMotion:'reduce'
     });
+    page.setDefaultTimeout(12000);
+    console.log('Checking viewport:',name,width+'x'+height);
     const errors=await open(page);
-    await page.screenshot({path:'preview/'+name+'-hero.png',animations:'disabled'});
+    if(['desktop','mobile','small-mobile'].includes(name))await page.screenshot({path:'preview/'+name+'-hero.png'});
     await scrollTo(page,'.index-section');
-    await page.screenshot({path:'preview/'+name+'-projects.png',animations:'disabled'});
+    if(['desktop','mobile'].includes(name))await page.screenshot({path:'preview/'+name+'-projects.png'});
     if(name==='desktop'){
       await scrollTo(page,'.research-studio');
-      await page.screenshot({path:'preview/desktop-research.png',animations:'disabled'});
+      console.log('Checking desktop research and career');
+      await page.screenshot({path:'preview/desktop-research.png'});
       await scrollTo(page,'.career-story');
-      await page.screenshot({path:'preview/desktop-experience.png',animations:'disabled'});
+      await page.screenshot({path:'preview/desktop-experience.png'});
       await scrollTo(page,'.contact-stage');
-      await page.screenshot({path:'preview/desktop-contact.png',animations:'disabled'});
+      await page.screenshot({path:'preview/desktop-contact.png'});
       // Filter, shared-element project details, keyboard escape.
       await scrollTo(page,'.index-section');
       await page.getByRole('button',{name:'AI & research'}).click();
@@ -102,9 +106,10 @@ try{
   // Verify scroll LINKED motion with real animations, not only static reduced-motion screenshots.
   {
     const page=await browser.newPage({viewport:{width:1440,height:900},reducedMotion:'no-preference'});
+    console.log('Checking non-reduced scroll choreography');
     const errors=await open(page);
     await scrollTo(page,'.approach-section',200);
-    await page.screenshot({path:'preview/motion-approach.png',animations:'disabled'});
+    await page.screenshot({path:'preview/motion-approach.png'});
     const geometry=await page.locator('.showcase-scroller').evaluate(el=>{
       const top=el.getBoundingClientRect().top+window.scrollY;
       return {top,height:el.offsetHeight};
@@ -116,15 +121,16 @@ try{
     await page.waitForTimeout(750);
     const halfway=await page.locator('.showcase-track').evaluate(el=>getComputedStyle(el).transform);
     if(start===halfway)throw Error('Featured gallery is not responding to scroll');
-    await page.screenshot({path:'preview/motion-work-gallery.png',animations:'disabled'});
+    await page.screenshot({path:'preview/motion-work-gallery.png'});
     await scrollTo(page,'.research-studio',440);
-    await page.screenshot({path:'preview/motion-research.png',animations:'disabled'});
+    await page.screenshot({path:'preview/motion-research.png'});
     if(errors.length)throw Error('Animation runtime errors: '+errors.join('; '));
     await page.close();
   }
 
   // Distinct, CMS-generated pages should exist without private GitHub URLs.
   for(const slug of ['scholarbro','trip-planner','wcag-checker','group-chat-assistant']){
+    console.log('Checking case-study route:',slug);
     const page=await browser.newPage({viewport:{width:1100,height:760}});
     const response=await page.goto(base+'projects/'+slug+'/',{waitUntil:'domcontentloaded'});
     if(!response?.ok())throw Error('Project page missing: '+slug);
@@ -138,6 +144,7 @@ try{
 
   console.log('PASS: 5 responsive viewports, navigation, filters, project details, source privacy, search, 3D motion, research, generated case studies');
 }finally{
+  clearTimeout(watchdog);
   await browser?.close();
   server.kill();
 }
