@@ -142,12 +142,15 @@ function WebGLSystem({progress,reduced}:{progress:MotionValue<number>;reduced:bo
       uv.setXY(vertex,(col+uv.getX(vertex))/columns,(rows-1-row+uv.getY(vertex))/rows);
     }
     uv.needsUpdate=true;
-    const tile=new THREE.Mesh(tileGeometry,faceMaterial);
-    tile.position.set(-1.455+col*.97,1.18-row*.78,-.247);
-    screen.add(tile);
-    fragments.push({object:tile,anchor:tile.position.clone(),
-      offset:new THREE.Vector3((col-1.5)*.75+(row%2?.18:-.18),(1-row)*.65,1.35+(col%2)*.48+(row%2)*.32),
-      spin:new THREE.Vector3((row-1)*.27,(col-1.5)*.3,(col+row)%2?.3:-.3)});
+    // Every shard is a physical bevelled screen tile, not a floating 2D square.
+    const tileGroup=new THREE.Group();
+    const back=mesh(.97,.78,.044,silver);back.position.z=-.038;tileGroup.add(back);
+    const tile=new THREE.Mesh(tileGeometry,faceMaterial);tile.position.z=.001;tileGroup.add(tile);
+    tileGroup.position.set(-1.455+col*.97,1.18-row*.78,-.247);
+    screen.add(tileGroup);
+    fragments.push({object:tileGroup,anchor:tileGroup.position.clone(),
+      offset:new THREE.Vector3((col-1.5)*.39,(1-row)*.36,1.34+(row%2)*.32+col*.07),
+      spin:new THREE.Vector3((row-1)*.07,(col-1.5)*.10,(col%2?-1:1)*.06)});
   }}
   const base=new THREE.Group();base.position.set(0,-1.43,.72);base.rotation.x=-1.08;rig.add(base);
   const keyboard=mesh(4.3,2.35,.13,silver);base.add(keyboard);
@@ -157,8 +160,8 @@ function WebGLSystem({progress,reduced}:{progress:MotionValue<number>;reduced:bo
     const key=mesh(.39,.27,.06,(x+y)%10===0?teal:mat(0x374f62,.35,.52));
     key.position.set((x-3.5)*.46,.69-y*.39,.15);base.add(key);keys.push(key);
     fragments.push({object:key,anchor:key.position.clone(),
-      offset:new THREE.Vector3((x-3.5)*.22, (1.5-y)*.36, 1.1+((x*3+y)%5)*.3),
-      spin:new THREE.Vector3((y-1.5)*.12,(x-3.5)*.13,(x%2===0?.17:-.17))});
+      offset:new THREE.Vector3((x-3.5)*.16, (1.5-y)*.2, 1.0+(y%2)*.22),
+      spin:new THREE.Vector3((y-1.5)*.065,(x-3.5)*.085,(x%2===0?.045:-.045))});
   }}
   const touch=mesh(1.14,.43,.02,mat(0x7c8fa0,.28,.49));touch.position.set(0,-.77,.15);base.add(touch);
 
@@ -211,7 +214,7 @@ function WebGLSystem({progress,reduced}:{progress:MotionValue<number>;reduced:bo
   const tubes:THREE.Mesh[]=[];
   const up=new THREE.Vector3(0,1,0),difference=new THREE.Vector3(),normalized=new THREE.Vector3();
   for(let i=0;i<4;i++){
-    const tubeGeom=new THREE.CylinderGeometry(.017,.017,1,10);
+    const tubeGeom=new THREE.CylinderGeometry(.012,.012,1,10);
     geometries.push(tubeGeom);
     const tube=new THREE.Mesh(tubeGeom,wireMat);rig.add(tube);tubes.push(tube);
   }
@@ -304,12 +307,12 @@ function WebGLSystem({progress,reduced}:{progress:MotionValue<number>;reduced:bo
     connectorPositions[i*6+3]=b.x;connectorPositions[i*6+4]=b.y;connectorPositions[i*6+5]=b.z-.25;
    }
    (connectorGeom.getAttribute('position') as THREE.BufferAttribute).needsUpdate=true;
-   connectorMat.opacity=architecture*.36;
-   wireMat.opacity=architecture*.86;
+   connectorMat.opacity=architecture*.22;
+   wireMat.opacity=architecture*.56;
    for(let i=0;i<tubes.length;i++){
      const a=targets[i],b=targets[i+1],tube=tubes[i];
      difference.set(b.x-a.x,b.y-a.y,b.z-a.z);
-     tube.position.set((a.x+b.x)/2,(a.y+b.y)/2,(a.z+b.z)/2-.12);
+     tube.position.set((a.x+b.x)/2,(a.y+b.y)/2,(a.z+b.z)/2-.55);
      normalized.copy(difference).normalize();
      tube.quaternion.setFromUnitVectors(up,normalized);
      tube.scale.set(architecture,Math.max(.001,difference.length()),architecture);
