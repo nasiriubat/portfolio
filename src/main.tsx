@@ -128,7 +128,7 @@ function Hero(){
           <MagneticAnchor href="#work" className="hero-primary">Explore my work</MagneticAnchor>
           <a href="#research" className="hero-text-link">Research & publications <ArrowUpRight size={17}/></a>
         </div></Reveal>
-        <div className="hero-location"><span>BASED IN TAMPERE, FINLAND</span><span>EST. 2021 / WORK IN PROGRESS, ALWAYS</span></div>
+        <div className="hero-location"><span>BASED IN TAMPERE, FINLAND</span><span>SOFTWARE · SYSTEMS · RESEARCH</span></div>
       </motion.div>
       <div className="hero-visual"><CinematicAssembly/><span className="hero-watermark" aria-hidden="true">N<span>—</span>S</span></div>
     </div>
