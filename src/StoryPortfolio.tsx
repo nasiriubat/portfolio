@@ -1,11 +1,10 @@
 import React,{useRef,useState} from 'react';
 import {AnimatePresence,motion,useReducedMotion,useScroll,useSpring,useTransform} from 'motion/react';
 import {ArrowDown,ArrowRight,ArrowUpRight,BookOpen,Check,Code2,ExternalLink,Mail,MapPin,MousePointer2} from 'lucide-react';
-import {projects,publications,type Project} from './content';
+import {projects,publications,publicLink,type Project} from './content';
 import {certifications,education,experience} from './PortfolioData';
 import StoryStudio from './StoryStudio';
 import {ProcessChapter,ProductIllustration,type IllustrationKind} from './StoryNarrative';
-import {publicLink} from './PlainPortfolio';
 import './story.css';
 
 const featured: {slug:IllustrationKind;title:string;eyebrow:string;lead:string;detail:string;accent:string}[]=[
