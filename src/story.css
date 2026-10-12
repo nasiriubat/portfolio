@@ -75,9 +75,9 @@
 .floating-icon.shield-icon{color:#c46e57;background:#f4ded5}
 .floating-title{font:700 14px var(--display);letter-spacing:-.045em;margin-top:12px}
 .studio-floating small{font-size:10px;color:#91969a;margin-top:5px}
-.studio-research{left:-1%;top:8%;width:34%;min-height:167px;transform:rotate(-7deg)!important}
-.studio-map{right:0;top:6%;width:32%;min-height:156px;transform:rotate(6deg)!important}
-.studio-audit{left:0%;bottom:5%;width:34%;min-height:142px;transform:rotate(-5deg)!important}
+.studio-research{left:-1%;top:8%;width:34%;min-height:167px;rotate:-7deg}
+.studio-map{right:0;top:6%;width:32%;min-height:156px;rotate:6deg}
+.studio-audit{left:0%;bottom:5%;width:34%;min-height:142px;rotate:-5deg}
 .network-drawing{width:100%;height:48px;margin-top:8px}
 .studio-route{display:grid;grid-template-columns:1fr 1fr 1fr;font:600 9px var(--display);color:#6e8386;gap:0;text-align:center;margin-top:18px}
 .route-nodes{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;margin:0 16px 6px}
