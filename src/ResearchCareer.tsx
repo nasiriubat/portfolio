@@ -126,13 +126,14 @@ export function CareerStory(){
   const [expanded,setExpanded]=useState<number|null>(0);
   const {scrollYProgress}=useScroll({target:ref,offset:['start end','end start']});
   const fill=useSpring(scrollYProgress,{stiffness:95,damping:25});
+  const ghostOpacity=useTransform(scrollYProgress,[0,.18,.8,1],[.28,1,1,.4]);
   return <section className="career-story shell" id="experience" ref={ref}>
     <SectionIntro chapter="04" eyebrow="EXPERIENCE" title="A career shaped by building."
       description="From shipping web applications to researching intelligent systems, the same principle follows me: make the thing work, then understand how to improve it."/>
     <div className="career-layout">
       <div className="career-sticky">
         <Reveal><span className="career-note">SOFTWARE ENGINEERING<br/>TO APPLIED AI RESEARCH</span></Reveal>
-        <motion.div className="career-bigtype" style={reduced?undefined:{opacity:useTransform(scrollYProgress,[0,.18,.8,1],[.28,1,1,.4])}} aria-hidden="true">04<span>chapters</span></motion.div>
+        <motion.div className="career-bigtype" style={reduced?undefined:{opacity:ghostOpacity}} aria-hidden="true">04<span>chapters</span></motion.div>
         <p>Experience across product engineering and research, in Bangladesh and Finland.</p>
       </div>
       <div className="career-timeline">
