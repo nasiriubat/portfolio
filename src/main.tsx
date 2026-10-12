@@ -117,12 +117,12 @@ function Hero(){
     <div className="hero-grid shell">
       <motion.div className="hero-identity" style={reduced?undefined:{y:textY,opacity:textOpacity}}>
         <Reveal><div className="hero-eyebrow"><span className="hero-signal"/><span>FULL-STACK SOFTWARE DEVELOPMENT</span><i/>APPLIED AI RESEARCH</div></Reveal>
-        <motion.h1 className="hero-name" initial="hidden" animate="show" transition={{staggerChildren:.16,delayChildren:.14}} aria-label="Nasir Uddin Shuvo">
+        {reduced?<h1 className="hero-name"><span className="hero-name-row">Nasir</span><span className="hero-name-row">Uddin</span><span className="hero-name-row"><em>Shuvo.</em></span></h1>:<motion.h1 className="hero-name" initial="hidden" animate="show" transition={{staggerChildren:.16,delayChildren:.14}} aria-label="Nasir Uddin Shuvo">
           {['Nasir','Uddin','Shuvo.'].map((part,i)=><span className="hero-name-row" key={part} aria-hidden="true">
             <motion.span variants={rise} transition={{duration:.95,ease:[.22,1,.36,1]}}>{i===2?<em>{part}</em>:part}</motion.span>
           </span>)}
-        </motion.h1>
-        <Reveal delay={.32}><p className="hero-declaration">Software engineer. <br/><span>AI researcher.</span> Builder of useful things.</p></Reveal>
+        </motion.h1>}
+        <Reveal delay={.32}><p className="hero-declaration">Full-stack engineering.<br/><span>Applied AI research.</span></p></Reveal>
         <Reveal delay={.45}><p className="hero-bio">I create full-stack products and investigate agent memory, retrieval and reliable AI systems at GPT Lab, Tampere University.</p></Reveal>
         <Reveal delay={.54}><div className="hero-links">
           <MagneticAnchor href="#work" className="hero-primary">Explore my work</MagneticAnchor>
