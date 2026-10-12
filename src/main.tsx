@@ -40,7 +40,11 @@ function AssemblyScene(){
  const spread=useTransform(scrollYProgress,[0,.35,.65,1],[110,40,0,-35]);
  const turn=useTransform(scrollYProgress,[0,.45,.8,1],[-32,-10,0,8]);
  const fade=useTransform(scrollYProgress,[0,.3,.7,1],[.3,1,1,.5]);
- return <div className="assembly-wrap" ref={ref}><div className="assembly-stage" aria-label="Animated software architecture assembling as you scroll"><div className="assembly-grid"/><motion.div className="assembly-layer assembly-back" style={reduced?{}:{y:spread,rotate:turn,opacity:fade}}><span>01 / INTERFACE</span><div className="assembly-mini-grid"><i/><i/><i/></div></motion.div><motion.div className="assembly-layer assembly-mid" style={reduced?{}:{y:useTransform(scrollYProgress,[0,.5,1],[-80,0,28]),rotate:useTransform(scrollYProgress,[0,.5,1],[20,0,-7])}}><span>02 / INTELLIGENCE</span><div className="assembly-node"><i/><i/><i/></div></motion.div><motion.div className="assembly-layer assembly-front" style={reduced?{}:{y:useTransform(scrollYProgress,[0,.5,1],[140,0,-45]),rotate:useTransform(scrollYProgress,[0,.5,1],[-15,0,6])}}><span>03 / ENGINEERING</span><div className="assembly-terminal"><b>~/build</b><p>→ design()</p><p>→ research()</p><p>→ ship()</p></div></motion.div><div className="assembly-label">IDEAS <span>→</span> SYSTEMS</div></div></div>;
+ const midY=useTransform(scrollYProgress,[0,.5,1],[-80,0,28]);
+ const midRotate=useTransform(scrollYProgress,[0,.5,1],[20,0,-7]);
+ const frontY=useTransform(scrollYProgress,[0,.5,1],[140,0,-45]);
+ const frontRotate=useTransform(scrollYProgress,[0,.5,1],[-15,0,6]);
+ return <div className="assembly-wrap" ref={ref}><div className="assembly-stage" aria-label="Animated software architecture assembling as you scroll"><div className="assembly-grid"/><motion.div className="assembly-layer assembly-back" style={reduced?{}:{y:spread,rotate:turn,opacity:fade}}><span>01 / INTERFACE</span><div className="assembly-mini-grid"><i/><i/><i/></div></motion.div><motion.div className="assembly-layer assembly-mid" style={reduced?{}:{y:midY,rotate:midRotate}}><span>02 / INTELLIGENCE</span><div className="assembly-node"><i/><i/><i/></div></motion.div><motion.div className="assembly-layer assembly-front" style={reduced?{}:{y:frontY,rotate:frontRotate}}><span>03 / ENGINEERING</span><div className="assembly-terminal"><b>~/build</b><p>→ design()</p><p>→ research()</p><p>→ ship()</p></div></motion.div><div className="assembly-label">IDEAS <span>→</span> SYSTEMS</div></div></div>;
 }
 function App() {
  const reduce = useReducedMotion();
