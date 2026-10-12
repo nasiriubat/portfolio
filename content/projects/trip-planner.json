@@ -1,8 +1,28 @@
 {
   "title": "NextEuroTrip — Trip Planner",
   "category": "Travel · Maps",
-  "status": "Repository reviewed",
+  "status": "Selected work",
   "url": "https://github.com/nasiriubat/trip-planner",
   "description": "Europe-focused route planner supporting round trips, one-way journeys and base-based exploration. Uses deterministic day-by-day routing, curated destination data and an interactive visited-map generator. Built with Laravel 13, Vue 3 and MySQL.",
-  "featured": true
+  "featured": true,
+  "features": [
+    "Plan European round trips, one-way journeys and day trips from a base",
+    "Build deterministic, ordered day-by-day routes through reviewed destinations",
+    "Create shareable visited maps for countries and regional subdivisions",
+    "Manage destination content, sources and editorial approvals"
+  ],
+  "workflow": [
+    "Choose trip origin, shape and available days",
+    "Select destinations using curated geographic data",
+    "Order feasible stops and distribute them across days",
+    "Display the itinerary on a map and optionally generate AI narration"
+  ],
+  "stack": [
+    "Laravel 13",
+    "PHP",
+    "MySQL",
+    "Vue 3",
+    "Vite",
+    "Tailwind CSS"
+  ]
 }

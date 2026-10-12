@@ -1,8 +1,27 @@
 {
   "title": "Group Chat Assistant",
   "category": "AI Agents · Knowledge Retrieval",
-  "status": "Repository reviewed",
+  "status": "Selected work",
   "url": "https://github.com/nasiriubat/group-chat-assistant",
   "description": "Multi-channel assistant for WhatsApp, Telegram, Discord and Slack that answers questions from group history with message-level citations. Uses hybrid vector/full-text search, reranking, evolving decision records, configurable LLM providers and per-group privacy, retention and cost controls.",
-  "featured": true
+  "featured": true,
+  "features": [
+    "Connect group conversations across WhatsApp, Telegram, Discord and Slack",
+    "Retrieve past messages with hybrid vector and full-text search, reranking and citations",
+    "Track decisions as they change, including corrections and superseded answers",
+    "Enforce per-group permissions, budgets, retention rules and audit logs"
+  ],
+  "workflow": [
+    "Ingest permitted messages and attached documents",
+    "Index locally for hybrid search",
+    "Retrieve, rerank and ground answers in source quotations",
+    "Track corrections, decision changes, token use and permissions"
+  ],
+  "stack": [
+    "PostgreSQL",
+    "Docker",
+    "Local embeddings",
+    "Hybrid retrieval",
+    "Configurable LLM providers"
+  ]
 }

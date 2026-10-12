@@ -1,8 +1,28 @@
 {
   "title": "StackLab — Full-stack Learning",
   "category": "Education · Developer Tools",
-  "status": "Repository reviewed",
+  "status": "Selected work",
   "url": "https://github.com/nasiriubat/stack-learner",
   "description": "Full-stack and AI learning platform with structured courses, runnable browser lessons, interview preparation, capstone missions, architecture diagrams and guided API labs. Built with Next.js, PostgreSQL, Drizzle and sandboxed code execution.",
-  "featured": false
+  "featured": false,
+  "features": [
+    "Structured full-stack and AI lessons with browser-run code examples",
+    "Interview preparation, capstone missions and guided application labs",
+    "Dedicated admin tools for content, feedback and user management",
+    "Self-hosted execution for JavaScript, Python and HTML examples"
+  ],
+  "workflow": [
+    "Choose a course, challenge or project",
+    "Read contextual guidance and run sandboxed examples",
+    "Practice interview questions or guided API missions",
+    "Track progress and review solutions"
+  ],
+  "stack": [
+    "Next.js",
+    "TypeScript",
+    "PostgreSQL",
+    "Drizzle ORM",
+    "Pyodide",
+    "Playwright"
+  ]
 }

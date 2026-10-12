@@ -1,8 +1,27 @@
 {
   "title": "Thesis RAG",
   "category": "AI · Retrieval-augmented generation",
-  "status": "Repository reviewed",
+  "status": "Selected work",
   "url": "https://github.com/nasiriubat/thesis-rag",
   "description": "Document-grounded research assistant with Flask, OpenAI-backed question answering and cited sources. Supports PDF/DOCX/TXT ingestion, web and YouTube sources, FAQ management, query history, review of unanswered questions, and an authenticated administrative interface.",
-  "featured": false
+  "featured": false,
+  "features": [
+    "Answer questions from uploaded files and supported external content",
+    "Show source references alongside grounded answers",
+    "Manage source documents, FAQs and unanswered user questions",
+    "Review new questions and promote administrator responses into FAQ entries"
+  ],
+  "workflow": [
+    "Ingest and extract uploaded or linked content",
+    "Create searchable embeddings and retrieve relevant passages",
+    "Generate grounded responses with citations",
+    "Route unresolved questions through an administrative review process"
+  ],
+  "stack": [
+    "Python",
+    "Flask",
+    "SQLite",
+    "OpenAI models",
+    "Vector retrieval"
+  ]
 }

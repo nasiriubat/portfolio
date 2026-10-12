@@ -1,8 +1,29 @@
 {
   "title": "Coscribe",
   "category": "Research Software · AI Writing",
-  "status": "Repository reviewed",
+  "status": "Selected work",
   "url": "https://github.com/nasiriubat/coscribe",
   "description": "Research writing workspace that interviews authors, structures research plans and drafts from verified source material. Supports citation evidence checks, literature discovery, reference management, section editing, reviewer-style critique and PDF/DOCX/LaTeX exports.",
-  "featured": true
+  "featured": true,
+  "features": [
+    "Interview researchers and shape study designs into approvable outlines",
+    "Ingest papers and discover literature through academic indexes",
+    "Draft sections from verified source material with citation-support checks",
+    "Review drafts and export venue-ready PDF, DOCX or LaTeX"
+  ],
+  "workflow": [
+    "Collect research notes, references and writing examples",
+    "Structure the study through guided interviews",
+    "Draft and review one section at a time",
+    "Verify citations and export to publication templates"
+  ],
+  "stack": [
+    "Docker",
+    "SQLite",
+    "Semantic Scholar",
+    "OpenAlex",
+    "arXiv",
+    "Pandoc",
+    "Tectonic"
+  ]
 }

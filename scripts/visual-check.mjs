@@ -28,6 +28,25 @@ try {
     }
     await page.close();
   }
+  // Check the moving artwork separately from the reduced-motion snapshots.
+  {
+    const page=await browser.newPage({viewport:{width:1440,height:900},reducedMotion:'no-preference'});
+    const errors=[];
+    page.on('pageerror',error=>errors.push(error.message));
+    await page.goto('http://127.0.0.1:4173/portfolio/',{waitUntil:'networkidle'});
+    const hero=page.locator('.cinematic-assembly');
+    await hero.waitFor();
+    const captions=await page.getByText(/SCROLL TO ASSEMBLE|ENGINEERED IN 3D/i).count();
+    if(captions)throw new Error('Unprofessional technology captions remain in the hero');
+    await page.waitForTimeout(1700); // Capture the settled sculpture, not its entrance sequence.
+    await page.screenshot({path:'preview/hero-assembled.png',animations:'disabled'});
+    await page.evaluate(()=>scrollTo(0,Math.round(window.innerHeight*.30)));
+    await page.waitForTimeout(1100);
+    const hasJS=errors.length>0;
+    if(hasJS)throw new Error('Kinetic hero runtime error: '+errors.join('; '));
+    await page.screenshot({path:'preview/hero-motion.png',animations:'disabled'});
+    await page.close();
+  }
   for(const slug of ['scholarbro','nexteurotrip']){
     const page=await browser.newPage();
     const r=await page.goto('http://127.0.0.1:4173/portfolio/projects/'+slug+'/');
