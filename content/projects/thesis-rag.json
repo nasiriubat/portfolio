@@ -1,0 +1,8 @@
+{
+  "title": "Thesis RAG",
+  "category": "AI · Retrieval-augmented generation",
+  "status": "Repository reviewed",
+  "url": "https://github.com/nasiriubat/thesis-rag",
+  "description": "Document-grounded research assistant with Flask, OpenAI-backed question answering and cited sources. Supports PDF/DOCX/TXT ingestion, web and YouTube sources, FAQ management, query history, review of unanswered questions, and an authenticated administrative interface.",
+  "featured": false
+}
