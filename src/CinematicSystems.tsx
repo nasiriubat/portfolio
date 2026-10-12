@@ -101,7 +101,8 @@ function WebGLSystem({progress,reduced}:{progress:MotionValue<number>;reduced:bo
  const host=useRef<HTMLDivElement>(null);
  const [ready,setReady]=useState(false);
  useEffect(()=>{
-  const element=host.current;if(!element||reduced)return;
+  const attached=host.current;if(!attached||reduced)return;
+  const element:HTMLDivElement=attached;
   let renderer:THREE.WebGLRenderer;
   try{renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:'high-performance'});}
   catch{return;}
