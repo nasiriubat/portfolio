@@ -1,4 +1,4 @@
-import React,{useRef,useState} from 'react';
+import React,{useEffect,useRef,useState} from 'react';
 import {AnimatePresence,motion,useReducedMotion,useScroll,useSpring,useTransform} from 'motion/react';
 import {ArrowDown,ArrowRight,ArrowUpRight,BookOpen,Check,Code2,ExternalLink,Mail,MapPin,MousePointer2} from 'lucide-react';
 import {projects,publications,publicLink,type Project} from './content';
@@ -224,6 +224,8 @@ function EndChapter(){
  </section>;
 }
 export default function StoryPortfolio(){
+ useEffect(()=>{const id=decodeURIComponent(window.location.hash.slice(1));if(!id)return;
+   requestAnimationFrame(()=>document.getElementById(id)?.scrollIntoView({block:'start'}));},[]);
  return <main className="story-portfolio">
   <Introduction/>
   <ProcessChapter/>
