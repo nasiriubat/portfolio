@@ -115,3 +115,23 @@
 .systems-static-header h2{font-size:clamp(39px,6vw,76px);color:#c8d5d8;margin-top:18px}
 @media(max-width:580px){.systems-static-header h1{font-size:clamp(36px,9vw,52px)}
 .systems-static-header h2{font-size:clamp(43px,10vw,63px)}}
+
+/* The Story navigation belongs to the cinematic world; the Plain header stays light. */
+.story-root .global-header{
+ background:#101e2be9;border-color:#60778970;color:#f2f4f5;
+ box-shadow:0 18px 45px #050b1844;backdrop-filter:blur(22px) saturate(120%)
+}
+.story-root .mark-letter span{color:#e6ad8c}
+.story-root .mark-full{border-left-color:#8293a455;color:#ccd6db}
+.story-root .global-links a{color:#adbcc8}
+.story-root .global-links a:hover{color:#f5e8db}
+.story-root .experience-switch{background:#1d3041;border-color:#456078}
+.story-root .experience-switch a{color:#adbdcb}
+.story-root .experience-switch a.selected{background:#e4ad8a;color:#192632}
+.story-root .experience-switch a:not(.selected):hover{background:#34495b;color:#e8edf2}
+.story-root .header-email{background:#c78e6e;color:#142637}
+.story-root .header-email:hover{background:#efb396}
+.story-root .mobile-nav-trigger{color:#f2f4f6}
+.story-root .mobile-links{background:#132434;border-color:#587085;color:#f0f3f6}
+.story-root .mobile-links a{border-bottom-color:#405366}
+.story-root .mobile-mode-note{color:#a7bac9}
