@@ -1,0 +1,8 @@
+{
+  "title": "RelayDesk — AI Support Platform",
+  "category": "Customer Support · SaaS",
+  "status": "Repository reviewed",
+  "url": "https://github.com/nasiriubat/ai-ticket",
+  "description": "Self-hosted help desk combining live chat, ticket management, knowledge base, AI assistance and customer communication. Designed as a Laravel-based product with installation wizard, support widget, automations, reporting, privacy controls and deployment documentation.",
+  "featured": false
+}

@@ -6,8 +6,10 @@ content:
     label: Projects
     type: collection
     path: content/projects
-    extension: json
+    filename: "{primary}.json"
     format: json
+    view:
+      primary: title
     fields:
       - { name: title, label: Title, type: string, required: true }
       - { name: category, label: Category, type: string }
@@ -19,8 +21,10 @@ content:
     label: Publications
     type: collection
     path: content/publications
-    extension: json
+    filename: "{primary}.json"
     format: json
+    view:
+      primary: title
     fields:
       - { name: title, label: Paper title, type: string, required: true }
       - { name: venue, label: Venue, type: string }

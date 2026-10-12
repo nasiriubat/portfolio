@@ -1,0 +1,8 @@
+{
+  "title": "Deadline District",
+  "category": "3D Games · WebGL",
+  "status": "Repository reviewed",
+  "url": "https://github.com/nasiriubat/deadline-district",
+  "description": "Three.js browser sniper game featuring procedurally seeded city environments, contracts, ballistics, vehicles, weather, customizable mobile controls, optional multiplayer and offline PWA support. Includes simulation tests, Playwright checks and rendering budgets.",
+  "featured": true
+}

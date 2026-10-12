@@ -1,0 +1,8 @@
+{
+  "title": "WCAG Accessibility Checker",
+  "category": "Developer tools · Accessibility",
+  "status": "Repository reviewed",
+  "url": "https://github.com/nasiriubat/wcag-checker",
+  "description": "Accessibility auditing platform that discovers pages through sitemaps or domain crawling, renders them in Playwright, and checks WCAG 2.1 A/AA rules with axe-core. Provides risk-scored violation reports, affected DOM elements, PDF/CSV exports, and optional AI-assisted remediation suggestions. Built with Flask, SQLite, Playwright and axe-core.",
+  "featured": true
+}
