@@ -193,15 +193,28 @@ function WebGLSystem({progress,reduced}:{progress:MotionValue<number>;reduced:bo
    modules.push(group);
   }
   const targets=[
-   new THREE.Vector3(-2.62,.78,.3),new THREE.Vector3(-1.34,-.69,1),
-   new THREE.Vector3(0,1.13,1.25),new THREE.Vector3(1.34,-.69,1),
-   new THREE.Vector3(2.62,.78,.3)
+   new THREE.Vector3(-2.48,1.05,.45),new THREE.Vector3(-1.23,-.85,1.05),
+   new THREE.Vector3(0,1.24,1.3),new THREE.Vector3(1.23,-.85,1.05),
+   new THREE.Vector3(2.48,1.05,.45)
   ];
   const connectorPositions=new Float32Array(4*6);
   const connectorGeom=new THREE.BufferGeometry();geometries.push(connectorGeom);
   connectorGeom.setAttribute('position',new THREE.BufferAttribute(connectorPositions,3));
   const connectorMat=new THREE.LineBasicMaterial({color:0x8db9c4,transparent:true,opacity:0});materials.push(connectorMat);
   const connectors=new THREE.LineSegments(connectorGeom,connectorMat);rig.add(connectors);
+  // Physically modelled luminous cables linking functional agent layers.
+  const wireMat=new THREE.MeshStandardMaterial({
+    color:0x9bd4cf,emissive:0x437a81,emissiveIntensity:.65,
+    transparent:true,opacity:0,roughness:.35,metalness:.17
+  });
+  materials.push(wireMat);
+  const tubes:THREE.Mesh[]=[];
+  const up=new THREE.Vector3(0,1,0),difference=new THREE.Vector3(),normalized=new THREE.Vector3();
+  for(let i=0;i<4;i++){
+    const tubeGeom=new THREE.CylinderGeometry(.017,.017,1,10);
+    geometries.push(tubeGeom);
+    const tube=new THREE.Mesh(tubeGeom,wireMat);rig.add(tube);tubes.push(tube);
+  }
   // Screens here are an illustrative gallery, not fake live screenshots.
   const productSpecs:[string,string,string,string][]=[
    ['ScholarBro','Research discovery','#122640','#9cb5ea'],
@@ -281,7 +294,7 @@ function WebGLSystem({progress,reduced}:{progress:MotionValue<number>;reduced:bo
     m.position.set(mix(0,target.x,pipelineIn),mix(0,target.y,pipelineIn),mix(-.4,target.z,pipelineIn));
     m.rotation.y= (i-2)*.09*architecture;
     m.rotation.z=(i%2===0?1:-1)*.05*architecture;
-    m.scale.setScalar(Math.max(.001,architecture));
+    m.scale.setScalar(Math.max(.001,architecture*1.21));
    }
    for(let i=0;i<4;i++){
     const a=moduleTargets[i],b=moduleTargets[i+1];
@@ -289,17 +302,26 @@ function WebGLSystem({progress,reduced}:{progress:MotionValue<number>;reduced:bo
     connectorPositions[i*6+3]=b.x;connectorPositions[i*6+4]=b.y;connectorPositions[i*6+5]=b.z-.25;
    }
    (connectorGeom.getAttribute('position') as THREE.BufferAttribute).needsUpdate=true;
-   connectorMat.opacity=architecture*.76;
+   connectorMat.opacity=architecture*.36;
+   wireMat.opacity=architecture*.86;
+   for(let i=0;i<tubes.length;i++){
+     const a=targets[i],b=targets[i+1],tube=tubes[i];
+     difference.set(b.x-a.x,b.y-a.y,b.z-a.z);
+     tube.position.set((a.x+b.x)/2,(a.y+b.y)/2,(a.z+b.z)/2-.12);
+     normalized.copy(difference).normalize();
+     tube.quaternion.setFromUnitVectors(up,normalized);
+     tube.scale.set(architecture,Math.max(.001,difference.length()),architecture);
+   }
    for(let i=0;i<products.length;i++){
     const frame=products[i];
     frame.position.set(mix((i-1)*3.8,(i-1)*2.08,productIn),mix(i%2?.3:-.3,0,productIn),mix(-1.7,.25,productIn));
     frame.rotation.y=(i-1)*(1-productIn)*.43+(i-1)*.09;
     frame.rotation.x=-(1-productIn)*.32;
-    frame.scale.setScalar(Math.max(.001,productIn));
+    frame.scale.setScalar(Math.max(.001,productIn*1.31));
    }
    rig.rotation.set(-.06+Math.sin(p*Math.PI)*.07-pointerY*.035,-.17+Math.sin(p*Math.PI*1.6)*.23+pointerX*.07,Math.sin(p*Math.PI*2)*.025);
-   rig.scale.setScalar(element.clientWidth<600?.8:1);
-   camera.position.z=9.45+Math.sin(p*Math.PI)*.58-productIn*.55;
+   rig.scale.setScalar(element.clientWidth<600?.8:1+architecture*.035);
+   camera.position.z=9.38+Math.sin(p*Math.PI)*.18-architecture*.47-productIn*.86;
    camera.position.y=mix(-.12,.1,p);
    camera.lookAt(0,0,0);
    stars.rotation.z=now*.000012;starMat.opacity=.25+architecture*.3;
