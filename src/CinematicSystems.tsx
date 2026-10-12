@@ -391,11 +391,15 @@ export default function CinematicSystems(){
     <div className="systems-static-header"><span>SOFTWARE ENGINEER / AI RESEARCHER</span><h1>Nasir Uddin Shuvo.</h1><h2>From a question<br/>to a working system.</h2>
      <p>I design the layers underneath an experience, evaluate how they behave, and turn them into software people can use.</p></div>
     <div className="systems-static-grid">
-     {chapters.map((beat,i)=><article key={beat.index}>
-      <span>0{i+1} / {beat.eyebrow}</span>
+     {chapters.map((beat,i)=><motion.article key={beat.index}
+      initial={reduced?false:{opacity:0,y:45,rotateX:7}}
+      whileInView={reduced?undefined:{opacity:1,y:0,rotateX:0}}
+      viewport={{once:true,amount:.23}}
+      transition={{duration:.66,delay:(i%2)*.08,ease:[.22,1,.36,1]}}>
+      <span>{beat.index} / {beat.eyebrow}</span>
       <div className="static-chapter-icon">{[<Cpu size={27}/>,<Layers3 size={27}/>,<Network size={27}/>,<Boxes size={27}/>][i]}</div>
       <h3>{beat.title} <em>{beat.highlight}</em></h3><p>{beat.body}</p>
-     </article>)}
+     </motion.article>)}
     </div>
    </div>
   </section>;
