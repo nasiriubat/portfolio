@@ -22,6 +22,13 @@ jobs:
           node-version: '22'
       - run: npm install
       - run: npm run build
+      - name: Upload built site for independent review
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: portfolio-site-build
+          path: dist/
+          retention-days: 7
       - name: Install browser for visual review
         if: github.event_name == 'pull_request'
         run: npx playwright install --with-deps chromium
@@ -29,7 +36,7 @@ jobs:
         if: github.event_name == 'pull_request'
         run: npm run test:visual
       - name: Upload visual preview screenshots
-        if: github.event_name == 'pull_request'
+        if: always() && github.event_name == 'pull_request'
         uses: actions/upload-artifact@v4
         with:
           name: portfolio-visual-preview

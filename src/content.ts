@@ -1,4 +1,4 @@
-export type Project={title:string;category:string;status:string;url:string;description:string;featured:boolean;slug:string;image?:string};
+export type Project={title:string;category:string;status:string;url:string;description:string;featured:boolean;slug:string;image?:string;features?:string[];workflow?:string[];stack?:string[]};
 export type Publication={title:string;venue:string;year:string;url:string};
 const raw=import.meta.glob('../content/projects/*.json',{eager:true,import:'default'}) as Record<string,Omit<Project,'slug'>>;
 const papers=import.meta.glob('../content/publications/*.json',{eager:true,import:'default'}) as Record<string,Publication>;
