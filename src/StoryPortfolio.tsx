@@ -36,6 +36,24 @@ function ChapterTransition(){
   <motion.div style={reduced?undefined:{x}}>BUILD <span>✳</span> QUESTION <span>✳</span> RESEARCH <span>✳</span> IMPROVE <span>✳</span> BUILD</motion.div>
  </div>;
 }
+function ScrollProductArt({kind}:{kind:IllustrationKind}){
+ const ref=useRef<HTMLDivElement>(null);
+ const reduced=Boolean(useReducedMotion());
+ const {scrollYProgress}=useScroll({target:ref,offset:['start end','end start']});
+ const zoom=useTransform(scrollYProgress,[0,.45,.78,1],[.78,1.03,1,.88]);
+ const rotation=useTransform(scrollYProgress,[0,.48,1],[12,0,-7]);
+ const offset=useTransform(scrollYProgress,[0,.5,1],[95,0,-64]);
+ const mask=useTransform(scrollYProgress,[0,.4,.72,1],[
+  'inset(12% 12% round 30px)','inset(0% 0% round 24px)',
+  'inset(0% 0% round 24px)','inset(7% 6% round 30px)'
+ ]);
+ return <div className="feature-art-perspective" ref={ref}>
+   <motion.div className="feature-art-wrap" style={reduced?undefined:{scale:zoom,rotateY:rotation,y:offset,clipPath:mask}}>
+      <ProductIllustration kind={kind}/>
+   </motion.div>
+ </div>;
+}
+
 function WorkChapter(){
  const reduced=useReducedMotion();
  return <section className="story-work" id="work">
@@ -60,12 +78,7 @@ function WorkChapter(){
        {p&&publicLink(p)&&<a href={publicLink(p)!} target="_blank" rel="noopener noreferrer" className="feature-live">Visit product ↗</a>}
       </div>
      </Reveal>
-     <motion.div className="feature-art-wrap"
-      initial={reduced?false:{opacity:.65,y:55,scale:.95}}
-      whileInView={reduced?undefined:{opacity:1,y:0,scale:1}}
-      viewport={{once:true,amount:.23}} transition={{duration:1.1,ease:revealEase}}>
-      <ProductIllustration kind={item.slug}/>
-     </motion.div>
+     <ScrollProductArt kind={item.slug}/>
     </div>
    </article>;
   })}</div>
