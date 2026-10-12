@@ -1,6 +1,6 @@
 import React, {useMemo,useState} from 'react';
 import {ArrowDownRight,ArrowRight,ArrowUpRight,ExternalLink,Mail,MapPin} from 'lucide-react';
-import {projects,publications,type Project} from './content';
+import {projects,publications,publicLink,type Project} from './content';
 import {experience,education,certifications,capabilities} from './PortfolioData';
 import './plain.css';
 
@@ -12,9 +12,6 @@ const classify=(p:Project):Exclude<Filter,'All'>=>{
   if(/ai|agent|research|rag|thesis|memory|notebook|interview|coscribe/.test(category))return 'AI & research';
   return 'Products';
 };
-export function publicLink(p:Project){
- try{const url=new URL(p.url);return url.protocol==='https:'&&!url.hostname.endsWith('github.com')?url.href:null;}catch{return null;}
-}
 const projectLink=(slug:string)=>import.meta.env.BASE_URL+'projects/'+slug+'/';
 
 function Heading({number,label,title,subtitle}:{number:string;label:string;title:string;subtitle?:string}){
