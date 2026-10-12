@@ -29,6 +29,7 @@ const mix=(a:number,b:number,t:number)=>a+(b-a)*t;
 
 function StoryBeat({data,progress,reduced}:{data:Chapter;progress:MotionValue<number>;reduced:boolean}) {
  const first=data.from===0;
+ const TitleTag=first?'h1':'h2';
  const last=data.until===1;
  const opacity=useTransform(
    progress,
@@ -39,7 +40,7 @@ function StoryBeat({data,progress,reduced}:{data:Chapter;progress:MotionValue<nu
  return <motion.div className="systems-beat" style={reduced?{opacity:1,y:0}:{opacity,y}}
    aria-label={data.eyebrow+': '+data.title+' '+data.highlight}>
    <div className="systems-beat-meta"><span>{data.index}</span><i/>{data.eyebrow}</div>
-   <h2>{data.title}<br/><em>{data.highlight}</em></h2>
+   <TitleTag>{data.title}<br/><em>{data.highlight}</em></TitleTag>
    <p>{data.body}</p>
    {last&&<a href="#work" className="systems-next">Meet the projects <ArrowDownRight size={19}/></a>}
  </motion.div>;
