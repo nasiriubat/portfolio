@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
-:root{--paper:#f3efe8;--paper-light:#faf8f3;--ink:#25272b;--dim:#6f7376;--accent:#db694c;--accent-dark:#a94b33;--night:#202a39;--blue:#385477;--green:#cfe0d7;--line:#d8d4cb;--display:'Space Grotesk',sans-serif;--body:'DM Sans',sans-serif;font-family:var(--body);font-synthesis:none;color:var(--ink);background:var(--paper)}
+:root{--paper:#f8fbff;--paper-light:#ffffff;--ink:#14284a;--dim:#627999;--accent:#306bfc;--accent-dark:#1f54bb;--night:#10254b;--blue:#306bfc;--green:#d3e9ff;--line:#dce7f8;--display:'Space Grotesk',sans-serif;--body:'DM Sans',sans-serif;font-family:var(--body);font-synthesis:none;color:var(--ink);background:var(--paper)}
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:95px}
 body{min-width:320px;margin:0;overflow-x:hidden}
@@ -37,3 +37,20 @@ img,svg{max-width:100%}
 @media(max-width:770px){.global-header{top:12px;height:64px;width:calc(100% - 20px);padding:0 9px 0 16px;border-radius:14px}.global-links{display:none}.mobile-nav-trigger{display:grid;place-items:center}.header-email{display:none}.mobile-links{top:87px}.experience-switch a{min-width:53px;padding:9px}}
 @media(max-width:380px){.global-header{gap:8px}.global-controls{gap:3px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+/* Shared navigation — blue-white instead of beige / newspaper. */
+.global-header{background:#fffffff1;border-color:#d9e6fa;box-shadow:0 12px 35px #3469af14}
+.mark-full{border-left-color:#cbdaf3;color:#345a91}
+.global-links a{color:#58749a}
+.global-links a:hover{color:#225de6}
+.experience-switch{background:#edf4ff;border-color:#d7e6fa}
+.experience-switch a{color:#52739f}
+.experience-switch a.selected{background:#2667ed;color:#fff;box-shadow:0 4px 13px #2363de28}
+.experience-switch a:not(.selected):hover{background:#e0ebfd;color:#2459b2}
+.header-email{background:#306bfc}
+.header-email:hover{background:#1c55cd}
+.mobile-links{background:#fff;border-color:#d6e6f8}
+.mobile-links a{border-bottom-color:#e4edfa}
+.mobile-mode-note{color:#6687ad}
+:focus-visible{outline-color:#3877fa}
+::selection{background:#bcd8ff;color:#153560}

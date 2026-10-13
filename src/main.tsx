@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { ArrowUpRight, Menu, X } from 'lucide-react';
 import './experience.css';
 
-const StoryPortfolio=lazy(()=>import('./WalkPortfolio'));
+const StoryPortfolio=lazy(()=>import('./MotionPortfolio'));
 const PlainPortfolio=lazy(()=>import('./PlainPortfolio'));
 const base=import.meta.env.BASE_URL;
 const params=new URLSearchParams(window.location.search);
@@ -16,10 +16,10 @@ function Navigation(){
   const sections=plain?[
     {label:'Projects',id:'projects'},{label:'Research',id:'research'},{label:'Experience',id:'experience'},{label:'Contact',id:'contact'}
   ]:[
-    {label:'Home',id:'home'},{label:'Education',id:'education'},{label:'Experience',id:'experience'},{label:'Projects',id:'projects'},{label:'Research',id:'research'},{label:'Contact',id:'contact'}
+    {label:'Home',id:'home'},{label:'Education',id:'education'},{label:'Career',id:'experience'},{label:'Work',id:'projects'},{label:'Research',id:'research'},{label:'Services',id:'services'},{label:'Contact',id:'contact'}
   ];
   return <>
-    <a className="skip-link" href={plain?'#projects':'#work'}>Skip to projects</a>
+    <a className="skip-link" href="#projects">Skip to projects</a>
     <header className="global-header">
       <a href={link(mode)} className="identity-mark" aria-label="Nasir Uddin Shuvo — homepage">
         <span className="mark-letter">n<span>.</span></span>
@@ -46,7 +46,7 @@ function Navigation(){
 }
 function App(){
  return <div className={mode==='plain'?'experience-root plain-root':'experience-root story-root'}>
-   {mode==='plain'&&<Navigation/>}
+   <Navigation/>
    <Suspense fallback={<main className="experience-loading" role="status">Loading portfolio…</main>}>
      {mode==='plain'?<PlainPortfolio/>:<StoryPortfolio/>}
    </Suspense>
