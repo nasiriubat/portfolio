@@ -102,7 +102,7 @@ function island(world:Parent){
 }
 function station(p:Parent,i:number,path:THREE.CatmullRomCurve3){
  const point=path.getPointAt(i/ROAD_STOPS),radial=new THREE.Vector3(point.x,0,point.z).normalize();
- const place=new THREE.Group();p.add(place);place.position.copy(point).addScaledVector(radial,4.1);place.position.y=.1;
+ const place=new THREE.Group();p.add(place);place.position.copy(point).addScaledVector(radial,-3.8);place.position.y=.1;
  // Orient scenery toward the road for a legible miniature diorama.
  place.rotation.y=Math.atan2(-radial.x,-radial.z);
  const base=cylinder(place,3.45,3.65,.44,['#f2c7ad','#d3e0f5','#d0ebd6','#f7d7c5','#dcd2ef','#f0e5b3','#cee6de'][i],0,-.04,0,36);
@@ -291,10 +291,10 @@ export function mountWorld(host:HTMLDivElement,progress:WalkProgress,onFailure:(
   const isMobile=host.clientWidth<720;
   const overview=progress.overview;
   const offset=overview?new THREE.Vector3(7,42,37):
-    radial.clone().multiplyScalar(isMobile?18:14).addScaledVector(tangent,isMobile?-6:-8).add(new THREE.Vector3(0,isMobile?17:12));
+    radial.clone().multiplyScalar(isMobile?12.5:11.8).addScaledVector(tangent,isMobile?-4.5:-5.8).add(new THREE.Vector3(0,isMobile?10.8:10.5));
   const destinationPosition=overview?offset:at.clone().add(offset);
   camera.position.lerp(destinationPosition,1-Math.exp(-dt*2.6));
-  const center=overview?new THREE.Vector3(0,0,0):at.clone().addScaledVector(radial,isMobile?2.3:2.15).add(new THREE.Vector3(0,1.55,0));
+  const center=overview?new THREE.Vector3(0,0,0):at.clone().addScaledVector(radial,isMobile?-1.4:-1.7).add(new THREE.Vector3(0,1.7,0));
   // Look target dampens independently to avoid sharp rotations at corners.
   look.lerp(center,1-Math.exp(-dt*3.2));
   camera.lookAt(look);
