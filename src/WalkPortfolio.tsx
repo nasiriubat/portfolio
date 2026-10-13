@@ -205,7 +205,7 @@ export default function WalkPortfolio(){
   root.addEventListener('scroll',schedule,{passive:true});window.addEventListener('resize',schedule);
   window.addEventListener('keydown',key);
   const hash=decodeURIComponent(window.location.hash.slice(1));const index=chapters.findIndex(c=>c.id===hash);
-  if(index>0){root.scrollTop=sections.current[index].offsetTop}
+  if(index>0){root.scrollTo({top:sections.current[index].offsetTop,behavior:'instant'})}
   update();
   return()=>{cancelAnimationFrame(frame);root.removeEventListener('scroll',schedule);window.removeEventListener('resize',schedule);window.removeEventListener('keydown',key)};
  },[]);
@@ -225,7 +225,10 @@ export default function WalkPortfolio(){
    <aside className="j-world" aria-label="Animated miniature world following the portfolio chapters">
     <div ref={canvas} className="j-three" aria-hidden="true"/>
     {failed&&<div className="j-webgl-fallback"><Route size={52}/><strong>Seven stops, one journey.</strong><p>3D is unavailable in this browser, but every chapter still works.</p></div>}
-    <div className="j-world-top"><span className="j-route-label"><span/> THE LOOP TRAIL</span><button className={'j-overview '+(overview?'is-active':'')} type="button" aria-pressed={overview} onClick={toggleOverview}><Compass size={17}/> {overview?'Follow character':'View entire loop'}</button></div>
+    <div className="j-world-top"><div className="j-loop-map" aria-label="Closed circuit connecting all seven stops">
+      <svg viewBox="0 0 130 75" aria-hidden="true"><ellipse cx="65" cy="37" rx="52" ry="27" fill="none" stroke="#7faea8" strokeWidth="5" strokeLinecap="round" strokeDasharray="1 0"/>{chapters.slice(0,7).map((chapter,i)=>{const angle=Math.PI/2-i*2*Math.PI/7;return <circle key={chapter.id} cx={65+52*Math.cos(angle)} cy={37-27*Math.sin(angle)} r={active===i||active===7&&i===0?6:3.5} fill={active===i||active===7&&i===0?'#d97961':'#fdfbf5'} stroke="#466f7c" strokeWidth="2"/>})}</svg>
+      <span>THE ROUND TRIP</span>
+     </div><button className={'j-overview '+(overview?'is-active':'')} type="button" aria-pressed={overview} onClick={toggleOverview}><Compass size={17}/> {overview?'Follow character':'View entire loop'}</button></div>
     <nav className="j-route-nav" aria-label="Jump to portfolio stop">{chapters.map((chapter,i)=><button key={chapter.id} type="button" aria-label={'Go to '+chapter.name} aria-current={active===i?'step':undefined} className={active===i?'is-active':''} onClick={()=>goTo(i)}><span>{chapter.marker}</span><span className="j-route-tip">{chapter.name}</span></button>)}</nav>
     <div className="j-world-foot"><div className="j-instructions"><span className="j-foot-circle"><Route size={17}/></span><div><strong>{chapters[active].name}</strong><span>Scroll the story to walk the loop</span></div></div>
      <div className="j-walk-buttons"><button disabled={active===0} aria-label="Previous chapter" onClick={()=>goTo(active-1)}><ArrowLeft size={18}/></button><button disabled={active===7} aria-label="Next chapter" onClick={()=>goTo(active+1)}><ArrowRight size={18}/></button></div></div>
