@@ -40,20 +40,24 @@ try{
    assert(errors.length===0,'Plain JavaScript error '+errors.join(';'));console.log('PASS Plain '+label);await page.close();
  }
  for(const suffix of ['','?view=story']){
-  const page=await browser.newPage({viewport:{width:1440,height:900}});
+  const page=await browser.newPage({viewport:{width:1440,height:900},reducedMotion:'reduce'});
+  const errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.goto(base+suffix,{waitUntil:'domcontentloaded',timeout:25000});
-  await page.waitForURL(url=>url.pathname.endsWith('/world-builder/'),{timeout:18000});
-  await page.locator('.chapter-hero h1').waitFor({state:'visible',timeout:18000});
-  assert((await page.title()).includes('World Builder'),'Story page title wrong');
-  const plainHref=await page.locator('.view-switch a[data-view="plain"]').getAttribute('href');
-  assert(plainHref==='../?view=plain','Story switch does not lead to original Plain');
-  console.log('PASS Story root redirect '+suffix);await page.close();
+  await page.locator('.walk-card h1').waitFor({state:'visible',timeout:18000});
+  assert(await page.locator('.walk-rail button').count()===7,'Seven journey stops missing');
+  assert(await page.locator('.walk-canvas canvas').count()===1||await page.locator('.walk-fallback').count()===1,'Missing walkthrough scene or fallback');
+  await page.screenshot({path:'preview/walkthrough-'+(suffix?'story':'homepage')+'.png'});
+  await page.getByRole('button',{name:'Next chapter'}).click();
+  await page.waitForTimeout(700);
+  assert((await page.locator('.walk-card h1').innerText()).includes('Where it began'),'Next chapter did not navigate');
+  assert(errors.length===0,'3D scene JavaScript errors: '+errors.join(';'));
+  console.log('PASS 3D Story',suffix);await page.close();
  }
  const page=await browser.newPage({viewport:{width:1200,height:800}});
  await page.goto(base+'?view=plain',{waitUntil:'domcontentloaded'});
  await page.locator('.plain-portfolio').waitFor({state:'visible'});
  await page.locator('.experience-switch a').filter({hasText:'Story'}).click();
- await page.waitForURL(url=>url.pathname.endsWith('/world-builder/'),{timeout:19000});
+ await page.locator('.walk-card h1').waitFor({state:'visible',timeout:19000});
  console.log('PASS Plain -> Story switch');await page.close();
  for(const slug of ['scholarbro','trip-planner','wcag-checker','group-chat-assistant']){
   const p=await browser.newPage();const response=await p.goto(base+'projects/'+slug+'/',{waitUntil:'domcontentloaded',timeout:19000});
