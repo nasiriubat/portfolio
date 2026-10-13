@@ -231,7 +231,7 @@ export function mountWorld(host:HTMLDivElement,progress:MutableProgress,onFailur
     const wanted=new THREE.Vector3(mobile?9.7:11.4,mobile?9.8:8.8,actualZ+(mobile?17.2:17));
     const blend=1-Math.exp(-dt*3.7);
     camera.position.lerp(wanted,blend);
-    const lookAt=new THREE.Vector3(mobile?-.35:-.45,1.25,actualZ-(mobile?2.8:1.8));
+    const lookAt=new THREE.Vector3(mobile?-.35:-.45,mobile?-2.2:1.25,actualZ-(mobile?2.8:1.8));
     const direction=lookAt.clone().sub(camera.position).normalize();
     const currentDirection=new THREE.Vector3();camera.getWorldDirection(currentDirection);
     const nextDirection=currentDirection.lerp(direction,blend).normalize();
