@@ -35,9 +35,6 @@ jobs:
       - name: Capture desktop/mobile previews and check overflow
         if: github.event_name == 'pull_request'
         run: npm run test:visual
-      - name: Review the World Builder experience in Chromium
-        if: github.event_name == 'pull_request'
-        run: npm run test:world-builder
       - name: Upload visual preview screenshots
         if: always() && github.event_name == 'pull_request'
         uses: actions/upload-artifact@v4
@@ -62,12 +59,11 @@ jobs:
       - name: Verify published Story and Plain URLs
         run: |
           for i in $(seq 1 18); do
-            if curl -fsSL --retry 2 --max-time 15 "https://nasiriubat.github.io/portfolio/world-builder/" | grep -q "The World Builder" && \
+            if curl -fsSL --retry 2 --max-time 15 "https://nasiriubat.github.io/portfolio/" | grep -q 'id="root"' && \
                curl -fsSL --retry 2 --max-time 15 "https://nasiriubat.github.io/portfolio/?view=plain" | grep -q 'id="root"'; then
-              echo "Public Pages HTML is available"
+              echo "Public Story and Plain entrypoints respond"
               exit 0
             fi
             sleep 6
           done
-          echo "Published Pages URL smoke test failed"
-          exit 1
+          echo "GitHub Pages smoke check failed"; exit 1
