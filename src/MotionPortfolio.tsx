@@ -259,6 +259,14 @@ function MobileProject({p,index}:{p:Project;index:number}){
  return <InView className={'s-mobile-product s-theme-'+theme.color}>
   <div className="s-project-index">{theme.number} / {String(featured.length).padStart(2,'0')} · {theme.tag}</div>
   <motion.div className="s-mobile-art" initial={reduced?false:{opacity:.45,scale:.92,y:24}} whileInView={reduced?undefined:{opacity:1,scale:1,y:0}} viewport={{once:true,amount:.2}} transition={{duration:.8,ease}}><ProjectCanvas p={p}/></motion.div>
+  <div className="s-mobile-assembly" aria-label="Project development journey">
+   {['Explore the problem','Build the product','See the result'].map((step,i)=>
+    <motion.span key={step} initial={reduced?false:{opacity:0,y:14,scale:.96}}
+     whileInView={reduced?undefined:{opacity:1,y:0,scale:1}} viewport={{once:true,amount:.3}}
+     transition={{duration:.45,delay:i*.13,ease}}>
+     <b>{String(i+1).padStart(2,'0')}</b>{step}
+    </motion.span>)}
+  </div>
   <h3>{p.title}</h3><p>{p.description}</p>
   <div className="s-pills">{(p.stack||[]).slice(0,4).map(t=><span key={t}>{t}</span>)}</div>
   <div className="s-stage-links"><a href={storyPath(p.slug)}>Case study <ArrowUpRight size={17}/></a>
