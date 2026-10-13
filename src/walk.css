@@ -25,6 +25,8 @@
 .j-world-top,.j-world-foot{position:absolute;z-index:3;left:25px;right:25px;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .j-world-top{top:103px}.j-world-foot{bottom:24px}
 .j-route-label{display:flex;align-items:center;gap:10px;color:#4a7783;font:800 10px 'Space Grotesk',sans-serif;letter-spacing:.15em;white-space:nowrap}
+.j-loop-map{display:flex;align-items:center;flex-direction:column;gap:2px;background:#fffefbcc;border:1px solid #ffffff;border-radius:13px;padding:6px 8px;color:#4e7981;font:800 9px 'Space Grotesk',sans-serif;letter-spacing:.13em;box-shadow:0 8px 20px #426e7622}
+.j-loop-map svg{width:102px;height:58px}
 .j-overview{display:inline-flex;align-items:center;gap:8px;background:#fffefce8;color:#335e6e;border:1px solid #f5fffd;box-shadow:0 8px 25px #527e7c1f;border-radius:100px;padding:11px 15px;font-size:11px!important;font-weight:800!important;white-space:nowrap}
 .j-overview.is-active{background:#214f61;color:white}
 .j-world-foot{background:#fffdfae9;border:1px solid #fff;box-shadow:0 8px 34px #38646f18;padding:11px 13px;border-radius:16px}
@@ -161,7 +163,7 @@
  .j-header{height:52px;top:8px;left:10px;right:10px;padding:0 8px 0 16px;border-radius:13px}
  .j-logo{font-size:25px!important}.j-current-stop{font-size:10px}
  .j-plain{padding:9px 10px;font-size:11px!important}
- .j-world-top{top:74px}.j-route-label{font-size:9px}
+ .j-world-top{top:69px}.j-loop-map{padding:3px 5px;font-size:7px}.j-loop-map svg{width:75px;height:44px}.j-route-label{font-size:9px}
  .j-overview{padding:9px 11px;font-size:10px!important}
  .j-route-nav{top:50%;right:8px;gap:1px}
  .j-route-nav button>span:first-child{width:25px;height:25px;font-size:9px}
@@ -182,7 +184,7 @@
 @media(max-width:370px){
  .j-shell{grid-template-rows:minmax(185px,40dvh) minmax(0,1fr)}
  .j-header{left:6px;right:6px}.j-plain{gap:3px;font-size:10px!important}
- .j-world-top{top:68px}.j-route-label{display:none}
+ .j-world-top{top:65px}.j-route-label{display:none}.j-loop-map svg{width:64px;height:37px}.j-loop-map{font-size:6px}
  .j-world-foot{left:6px;right:6px}
  .j-section{padding:22px 17px 36px}
  .j-home h1{font-size:43px}.j-metrics{gap:3px}
