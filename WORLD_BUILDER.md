@@ -14,3 +14,7 @@ This character-driven experience uses original flat illustration plus CSS perspe
 
 ## Deploy
 GitHub Actions uploads Vite's dist folder, including `public/world-builder`. The standalone story link is `https://nasiriubat.github.io/portfolio/world-builder/`, while Plain remains at `https://nasiriubat.github.io/portfolio/?view=plain`. Confirm GitHub Pages deployment status after merging before advertising the URL.
+
+## Homepage rollout
+
+The primary `/portfolio/` and `/portfolio/?view=story` routes redirect client-side to `/portfolio/world-builder/` and preserve section fragments. The existing React Plain view continues at `/portfolio/?view=plain` and is unaffected. Story's Plain toggle returns to the original React Plain version. The generated sitemap lists the story route.

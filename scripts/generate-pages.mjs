@@ -55,7 +55,7 @@ const section = (number, label, heading, inner) => `
 
 await rm(destination, { recursive: true, force: true });
 await mkdir(destination, { recursive: true });
-const urls = [origin + '/'];
+const urls = [origin + '/', origin + '/world-builder/'];
 
 for (const file of (await readdir(source)).filter(name => name.endsWith('.json')).sort()) {
   const project = JSON.parse(await readFile(join(source, file), 'utf8'));
