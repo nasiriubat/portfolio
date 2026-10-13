@@ -265,7 +265,7 @@ function MobileProject({p,index}:{p:Project;index:number}){
  </InView>;
 }
 function Projects(){
- const ref=useRef<HTMLElement>(null),reduced=Boolean(useReducedMotion()),small=useSmallScreen();
+ const ref=useRef<HTMLDivElement>(null),reduced=Boolean(useReducedMotion()),small=useSmallScreen();
  const {scrollYProgress}=useScroll({target:ref,offset:['start start','end end']});
  const [active,setActive]=useState(0),[showAll,setShowAll]=useState(false);
  const count=featured.length;
