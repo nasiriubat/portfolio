@@ -53,6 +53,29 @@ try{
   assert(errors.length===0,'3D scene JavaScript errors: '+errors.join(';'));
   console.log('PASS 3D Story',suffix);await page.close();
  }
+ for(const [label,width,height] of [['tablet',1024,768],['mobile',390,844],['small-mobile',320,740]]){
+  const page=await browser.newPage({viewport:{width,height},deviceScaleFactor:1,reducedMotion:'reduce'});
+  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+  await page.goto(base,{waitUntil:'domcontentloaded',timeout:25000});
+  await page.locator('.walk-card h1').waitFor({state:'visible'});
+  assert(await page.locator('.walk-rail button').count()===7,label+' story chapter navigation missing');
+  assert((await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth))<=2,label+' 3D hero horizontal overflow');
+  await page.screenshot({path:'preview/walkthrough-'+label+'-hero.png'});
+  await page.locator('.walk-rail button').nth(3).click();
+  await page.waitForTimeout(450);
+  assert((await page.locator('.walk-card h1').innerText()).includes('Things I have built'),label+' projects chapter failed');
+  await page.screenshot({path:'preview/walkthrough-'+label+'-projects.png'});
+  const item=page.locator('.walk-projects button').first();
+  await item.click();
+  assert(await page.getByRole('dialog').isVisible(),label+' project detail failed');
+  await page.getByRole('button',{name:'Close project'}).click();
+  assert(!await page.getByRole('dialog').isVisible(),label+' project dialog failed to close');
+  assert((await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth))<=2,label+' projects horizontal overflow');
+  await page.getByRole('link',{name:/Plain view/}).click();
+  await page.locator('.plain-portfolio').waitFor({state:'visible',timeout:19000});
+  assert(errors.length===0,label+' JavaScript errors '+errors.join(';'));
+  console.log('PASS responsive 3D walkthrough '+label);await page.close();
+ }
  const page=await browser.newPage({viewport:{width:1200,height:800}});
  await page.goto(base+'?view=plain',{waitUntil:'domcontentloaded'});
  await page.locator('.plain-portfolio').waitFor({state:'visible'});
