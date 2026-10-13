@@ -1,94 +1,135 @@
 import {chromium} from 'playwright';
 import {spawn} from 'node:child_process';
 import {mkdir} from 'node:fs/promises';
+
 const BASE='http://127.0.0.1:4173/portfolio/';
 const server=spawn('npm',['run','preview','--','--host','127.0.0.1','--port','4173','--strictPort'],{stdio:'ignore'});
-const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
-const assert=(condition,message)=>{if(!condition)throw Error(message)};
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const assert=(v,message)=>{if(!v)throw Error(message)};
+const watchdog=setTimeout(()=>{console.error('Portfolio browser QA timed out');process.exit(3)},210000);
 let browser;
-const watchdog=setTimeout(()=>{console.error('Portfolio QA watchdog expired');process.exit(2)},205000);
+async function place(page,selector,fraction=.5){
+ await page.locator(selector).evaluate((el,f)=>{
+   const top=scrollY+el.getBoundingClientRect().top;
+   const distance=Math.max(0,el.getBoundingClientRect().height-innerHeight);
+   scrollTo({top:top+distance*f,behavior:'instant'});
+ },fraction);
+ await page.waitForTimeout(350);
+}
+async function overflow(page,label){
+ const dim=await page.evaluate(()=>({client:innerWidth,scroll:document.documentElement.scrollWidth,
+   body:document.body.scrollWidth}));
+ assert(dim.scroll<=dim.client+2&&dim.body<=dim.client+2,label+' horizontal overflow: '+JSON.stringify(dim));
+}
+async function screenshot(page,name){
+ await page.screenshot({path:'preview/'+name+'.png',timeout:15000});
+ console.log('Captured '+name);
+}
 try{
- let ready=false;for(let i=0;i<110;i++){try{if((await fetch(BASE)).ok){ready=true;break}}catch{}await sleep(250)}
- assert(ready,'Preview server unavailable');await mkdir('preview',{recursive:true});
+ let ready=false;
+ for(let i=0;i<100;i++){try{const r=await fetch(BASE);if(r.ok){ready=true;break}}catch{}await sleep(300)}
+ assert(ready,'Preview unavailable');
+ await mkdir('preview',{recursive:true});
  browser=await chromium.launch({headless:true});
- for(const [name,width,height] of [['desktop',1440,900],['laptop',1024,768],['mobile',390,844],['small-mobile',320,740]]){
-  const context=await browser.newContext({viewport:{width,height},reducedMotion:'reduce',deviceScaleFactor:1,permissions:['clipboard-read','clipboard-write']});
-  const page=await context.newPage();page.setDefaultTimeout(10000);
+ for(const [label,width,height,reduced] of [
+  ['desktop',1440,900,false],['laptop',1024,768,false],['mobile',390,844,false],['small-mobile',320,740,true]
+ ]){
+  const context=await browser.newContext({viewport:{width,height},deviceScaleFactor:1,
+   reducedMotion:reduced?'reduce':'no-preference',permissions:['clipboard-read','clipboard-write']});
+  const page=await context.newPage();page.setDefaultTimeout(11000);
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
-  const resp=await page.goto(BASE,{waitUntil:'domcontentloaded',timeout:25000});
-  assert(resp?.ok(),name+' Story response invalid');
-  await page.locator('.j-shell').waitFor({state:'visible'});
-  await page.locator('#home h1').waitFor({state:'visible'});
-  assert(await page.locator('.j-section').count()===8,name+' should have eight journey chapters');
-  assert(await page.locator('.j-route-nav button').count()===8,name+' should have eight route stops');
-  assert((await page.locator('.j-three canvas').count())===1||(await page.locator('.j-webgl-fallback').count())===1,name+' 3D scene or fallback missing');
-  assert((await page.locator('#experience .j-job').count())===4,name+' all work entries not visible');
-  assert((await page.locator('#education .j-degree').count())===2,name+' degrees missing');
-  assert((await page.locator('#projects .j-project').count())===4,name+' featured products missing');
-  assert((await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth))<=2,name+' document horizontal overflow');
-  const dimensions=await page.evaluate(()=>{
-   const panel=document.querySelector('.j-panel').getBoundingClientRect();
-   const visual=document.querySelector('.j-world').getBoundingClientRect();
-   return {panel:{x:panel.x,y:panel.y,right:panel.right,bottom:panel.bottom,width:panel.width,height:panel.height},
-    visual:{x:visual.x,y:visual.y,right:visual.right,bottom:visual.bottom},scrolling:document.querySelector('.j-panel').scrollHeight>document.querySelector('.j-panel').clientHeight};
-  });
-  assert(dimensions.scrolling,name+' content viewport not scrollable');
-  if(width>760)assert(dimensions.panel.right<=dimensions.visual.x+2,name+' world hides desktop reading panel');
-  else assert(dimensions.visual.bottom<=dimensions.panel.y+2,name+' world hides mobile reading panel');
-  await page.screenshot({path:'preview/loop-'+name+'-welcome.png'});
-  await page.getByRole('button',{name:'Go to Projects'}).click();
-  await page.waitForFunction(()=>Math.abs(document.querySelector('.j-panel').scrollTop-document.querySelector('#projects').offsetTop)<10);
-  await page.locator('#projects h2').scrollIntoViewIfNeeded();
-  const heading=await page.locator('#projects h2').boundingBox();
-  assert(heading && heading.y >=dimensions.panel.y-2 && heading.y+heading.height<=dimensions.panel.bottom+2,name+' project heading clipped');
-  await page.screenshot({path:'preview/loop-'+name+'-projects.png'});
-  await page.locator('#projects .j-project').nth(1).locator('summary').click();
-  assert(await page.locator('#projects .j-project').nth(1).locator('details').evaluate(d=>d.open),name+' expandable workflow not working');
-  const projectBody=await page.locator('#projects .j-project').nth(1).locator('li').last();
-  await projectBody.scrollIntoViewIfNeeded();
-  const bodyBox=await projectBody.boundingBox();
-  assert(bodyBox && bodyBox.y>=dimensions.panel.y-2 && bodyBox.y+bodyBox.height<=dimensions.panel.bottom+2,name+' project workflow hidden beneath another surface');
-  await page.getByRole('button',{name:'Go to Research'}).click();
-  await page.waitForFunction(()=>Math.abs(document.querySelector('.j-panel').scrollTop-document.querySelector('#research').offsetTop)<10);
-  assert(await page.locator('#research .j-research-themes article').count()===3,name+' research themes missing');
-  await page.getByRole('button',{name:'Go to Contact'}).click();
-  await page.waitForFunction(()=>Math.abs(document.querySelector('.j-panel').scrollTop-document.querySelector('#contact').offsetTop)<10);
-  assert(await page.getByRole('link',{name:/dev.nasirshuvo@gmail.com/}).count()>=1,name+' contact email missing');
-  await page.getByRole('button',{name:'Go to Full circle'}).click();
-  await page.waitForFunction(()=>Math.abs(document.querySelector('.j-panel').scrollTop-document.querySelector('#finish').offsetTop)<10);
-  assert(await page.locator('#finish h2').isVisible(),name+' finish scene missing');
-  await page.getByRole('button',{name:/Walk it again/}).click();
-  await page.waitForFunction(()=>document.querySelector('.j-panel').scrollTop<5);
-  assert(await page.locator('#home h1').isVisible(),name+' round trip did not return to the beginning');
-  await page.getByRole('button',{name:/View entire loop/}).click();
-  assert(await page.getByRole('button',{name:/Follow character/}).getAttribute('aria-pressed')==='true',name+' overview toggle failed');
-  assert(errors.length===0,name+' browser errors: '+errors.join(';'));
-  console.log('PASS LOOP',name,'chapter coverage, no scene/content overlap, projects, research, contact, return');
+  const response=await page.goto(BASE,{waitUntil:'domcontentloaded',timeout:25000});
+  assert(response?.ok(),label+' HTTP response');
+  await page.locator('.s-hero-name').waitFor({state:'visible',timeout:16000});
+  await page.locator('.s-career-entry').first().waitFor({state:'attached'});
+  assert((await page.locator('.s-degree-card').count())===2,label+' missing degrees');
+  assert((await page.locator('.s-career-entry').count())===4,label+' missing careers');
+  assert((await page.locator('.s-research-node').count())===5,label+' missing research modules');
+  assert((await page.locator('.s-service-card').count())===3,label+' missing services');
+  assert((await page.locator('.s-hero-tile').count())===4,label+' missing hero assembly parts');
+  assert((await page.locator('.j-world,.j-three,canvas,.s-character').count())===0,label+' legacy character/road/3D artifact still visible');
+  await overflow(page,label+' initial');
+  await screenshot(page,'assembly-'+label+'-hero');
+  if(width>900&&!reduced){
+   await place(page,'.s-hero',.43);await screenshot(page,'assembly-'+label+'-hero-assembled');
+   await place(page,'.s-degree-scroll',.47);await screenshot(page,'assembly-'+label+'-education');
+   await place(page,'#experience',.37);await screenshot(page,'assembly-'+label+'-career');
+   const count=await page.locator('.s-theater-stage').count();
+   assert(count>=3,label+' featured project stages missing');
+   for(let i=0;i<count;i++){
+    await place(page,'.s-project-scroll',(i+.38)/count);
+    const act=page.locator('.s-theater-stage[aria-hidden="false"]');
+    assert(await act.count()===1,label+' multiple active product stages');
+    const text=await act.locator('h3').innerText();
+    assert(text.trim().length>2,label+' active project title missing');
+    await screenshot(page,'assembly-'+label+'-product-'+(i+1));
+    const visible=await act.locator('.s-project-part-0').evaluate(el=>{
+      const rect=el.getBoundingClientRect();return rect.width>100&&rect.height>100;
+    });
+    assert(visible,label+' main product assembly missing');
+   }
+   await place(page,'.s-research-scroll',.47);await screenshot(page,'assembly-'+label+'-research');
+   await place(page,'.s-service-scroll',.43);await screenshot(page,'assembly-'+label+'-services');
+  }else{
+   await place(page,'#education');await screenshot(page,'assembly-'+label+'-education');
+   await place(page,'#projects');await screenshot(page,'assembly-'+label+'-projects');
+   assert((await page.locator('.s-mobile-product').count())>=3,label+' mobile projects missing');
+   await place(page,'#research');await screenshot(page,'assembly-'+label+'-research');
+   await place(page,'#services');await screenshot(page,'assembly-'+label+'-services');
+  }
+  await place(page,'#contact');await screenshot(page,'assembly-'+label+'-contact');
+  await overflow(page,label+' after sections');
+  if(label==='desktop'){
+   await page.getByRole('button',{name:/view all .* other projects/i}).click();
+   assert((await page.locator('.s-other-card').count())>=7,'Show all projects button did not expand');
+   await page.getByRole('button',{name:'Copy email'}).click();
+   assert((await page.getByRole('status').innerText()).includes('copied'),'Copy-email action did not finish');
+   await page.getByRole('navigation',{name:'Main sections'}).getByRole('link',{name:'Work'}).click();
+   await page.waitForTimeout(600);
+   assert((new URL(page.url()).hash)==='#projects','Navigation hash not working');
+  }
+  if(width<=390){
+   await page.getByRole('button',{name:'Open navigation'}).click();
+   await page.getByRole('navigation',{name:'Mobile sections'}).waitFor({state:'visible'});
+   await page.getByRole('navigation',{name:'Mobile sections'}).getByRole('link',{name:'Research'}).click();
+   assert(!await page.getByRole('navigation',{name:'Mobile sections'}).isVisible(),'Mobile nav failed to close');
+  }
+  assert(errors.length===0,label+' JS errors: '+errors.join('; '));
+  console.log('PASS ASSEMBLY',label);
   await context.close();
  }
- for(const [name,width,height] of [['plain-desktop',1440,900],['plain-mobile',390,844],['plain-small',320,740]]){
+ for(const [label,width,height] of [
+  ['plain-desktop',1440,900],['plain-mobile',390,844],['plain-small-mobile',320,740]
+ ]){
   const page=await browser.newPage({viewport:{width,height},reducedMotion:'reduce'});
-  const response=await page.goto(BASE+'?view=plain',{waitUntil:'domcontentloaded',timeout:20000});
-  assert(response?.ok(),name+' Plain response invalid');
+  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+  const r=await page.goto(BASE+'?view=plain',{waitUntil:'domcontentloaded',timeout:22000});
+  assert(r?.ok(),'Plain URL failed');
   await page.locator('.plain-project').first().waitFor({state:'visible'});
-  assert((await page.locator('.plain-project').count())>=8,name+' plain projects missing');
-  assert(await page.locator('.plain-job').count()===4,name+' plain experience missing');
-  assert((await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth))<=2,name+' Plain overflow');
-  await page.screenshot({path:'preview/'+name+'-home.png'});
-  if(width<=390){await page.getByRole('button',{name:'Open navigation'}).click();assert(await page.getByRole('navigation',{name:'Mobile sections'}).isVisible(),name+' mobile menu failed')}
-  console.log('PASS',name);await page.close();
+  assert((await page.locator('.plain-project').count())>=8,label+' missing Plain projects');
+  assert((await page.locator('.plain-job').count())===4,label+' missing Plain career');
+  assert((await page.locator('.plain-degree-grid article').count())===2,label+' missing Plain education');
+  assert((await page.locator('.plain-cert-grid>div').count())>=5,label+' missing Plain certifications');
+  assert((await page.getByRole('link',{name:'GitHub profile'}).count())===1,label+' Plain social links lost');
+  const theme=await page.locator('.plain-portfolio').evaluate(el=>getComputedStyle(el).backgroundColor);
+  assert(theme==='rgb(255, 255, 255)',label+' Plain remains beige: '+theme);
+  await screenshot(page,'assembly-'+label+'-hero');
+  await place(page,'#projects');await screenshot(page,'assembly-'+label+'-projects');
+  if(label==='plain-desktop'){
+   await page.getByRole('button',{name:'AI & research'}).click();
+   assert((await page.locator('.plain-project').count())>=1,'Plain filter broken');
+  }
+  await overflow(page,label);
+  assert(errors.length===0,label+' JS errors: '+errors.join('; '));
+  await page.close();console.log('PASS',label);
  }
- const direct=await browser.newPage();
- await direct.goto(BASE+'?view=story#research',{waitUntil:'domcontentloaded'});
- await direct.waitForFunction(()=>Math.abs(document.querySelector('.j-panel')?.scrollTop-document.querySelector('#research')?.offsetTop)<12);
- console.log('PASS direct Story hash and route');
- await direct.close();
  for(const slug of ['scholarbro','trip-planner','wcag-checker','group-chat-assistant']){
   const page=await browser.newPage();
-  const response=await page.goto(BASE+'projects/'+slug+'/',{waitUntil:'domcontentloaded',timeout:20000});
-  assert(response?.ok(),'Case study page missing '+slug);
-  assert((await page.locator('a[href*="github.com/nasiriubat/"]').count())===0,'Private repository exposed '+slug);
+  const r=await page.goto(BASE+'projects/'+slug+'/',{waitUntil:'domcontentloaded',timeout:22000});
+  assert(r?.ok(),'Case study route missing '+slug);
+  assert(await page.locator('h1').count()>0,'Case study missing heading '+slug);
+  assert((await page.locator('a[href*="github.com/nasiriubat/"]').count())===0,'Private source disclosed in '+slug);
   await page.close();
  }
- console.log('PASS case study routes and private-link protection');
+ console.log('PASS links, content, scroll sequences, Plain and all case studies');
 }finally{clearTimeout(watchdog);await browser?.close();server.kill()}
