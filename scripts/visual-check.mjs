@@ -52,6 +52,7 @@ try{
   await screenshot(page,'assembly-'+label+'-hero');
   if(width>900&&!reduced){
    await place(page,'.s-hero',.43);await screenshot(page,'assembly-'+label+'-hero-assembled');
+   await place(page,'.s-hero',.91);await screenshot(page,'assembly-'+label+'-hero-breakup');
    await place(page,'.s-degree-scroll',.47);await screenshot(page,'assembly-'+label+'-education');
    await place(page,'#experience',.37);await screenshot(page,'assembly-'+label+'-career');
    const count=await page.locator('.s-theater-stage').count();
@@ -83,7 +84,8 @@ try{
    await page.getByRole('button',{name:/view all .* other projects/i}).click();
    assert((await page.locator('.s-other-card').count())>=7,'Show all projects button did not expand');
    await page.getByRole('button',{name:'Copy email'}).click();
-   assert((await page.getByRole('status').innerText()).includes('copied'),'Copy-email action did not finish');
+   await page.waitForFunction(()=>document.querySelector('.s-copy-status')?.textContent?.trim().length>0,{timeout:6500});
+   assert((await page.locator('.s-copy-status').innerText()).includes('Email'),'Copy-email feedback missing');
    await page.getByRole('navigation',{name:'Main sections'}).getByRole('link',{name:'Work'}).click();
    await page.waitForTimeout(600);
    assert((new URL(page.url()).hash)==='#projects','Navigation hash not working');
