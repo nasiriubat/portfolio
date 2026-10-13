@@ -108,6 +108,11 @@ try{
   const r=await page.goto(BASE+'?view=plain',{waitUntil:'domcontentloaded',timeout:22000});
   assert(r?.ok(),'Plain URL failed');
   await page.locator('.plain-project').first().waitFor({state:'visible'});
+  const uncoveredHeader=await page.locator('.global-header').evaluate(el=>{
+   const r=el.getBoundingClientRect();const x=r.left+r.width*.5,y=r.top+r.height*.5;
+   const top=document.elementFromPoint(x,y);return top===el||Boolean(top&&el.contains(top));
+  });
+  assert(uncoveredHeader,label+' Plain navigation is covered by page content');
   assert((await page.locator('.plain-project').count())>=8,label+' missing Plain projects');
   assert((await page.locator('.plain-job').count())===4,label+' missing Plain career');
   assert((await page.locator('.plain-degree-grid article').count())===2,label+' missing Plain education');
