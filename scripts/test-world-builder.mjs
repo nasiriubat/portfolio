@@ -45,7 +45,8 @@ try{
    await page.locator('[data-filter="ai"]').click();
    assert((await page.locator('#project-grid .project-item').count())>0,'Project filter failed');
    await page.locator('#copy-email').click();
-   assert((await page.locator('#toast').innerText()).length>2,'Copy email control failed');
+   await page.waitForFunction(()=>Boolean(document.querySelector('#toast')?.textContent?.trim()),{timeout:6000});
+   assert((await page.locator('#toast').innerText()).length>2,'Copy email control gave no feedback');
   }
   if(width<=390){
    await page.locator('#menu-toggle').click();
