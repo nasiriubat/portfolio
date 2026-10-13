@@ -532,3 +532,10 @@
  .s-hero-tile{transform:none!important;opacity:1!important}
  .s-degrees,.s-service-grid,.s-research-pipeline{perspective:none}
 }
+
+/* Compact project journey: visible beneath artwork rather than over the UI. */
+.s-mobile-assembly{display:flex;gap:7px;flex-wrap:wrap;margin-top:13px}
+.s-mobile-assembly>span{display:inline-flex;align-items:center;gap:6px;min-width:0;padding:8px 9px;border-radius:8px;background:#eef5ff;border:1px solid #d5e5fc;color:#356091;font:600 10px/1.35 'Space Grotesk',sans-serif}
+.s-mobile-assembly b{font-size:9px;color:#2468e8}
+@media(max-width:355px){.s-mobile-assembly>span{font-size:9px;padding:7px}}
+@media(prefers-reduced-motion:reduce){.s-mobile-assembly>span{opacity:1!important;transform:none!important}}
