@@ -59,3 +59,15 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+      - name: Verify published Story and Plain URLs
+        run: |
+          for i in $(seq 1 18); do
+            if curl -fsSL --retry 2 --max-time 15 "https://nasiriubat.github.io/portfolio/world-builder/" | grep -q "The World Builder" && \
+               curl -fsSL --retry 2 --max-time 15 "https://nasiriubat.github.io/portfolio/?view=plain" | grep -q 'id="root"'; then
+              echo "Public Pages HTML is available"
+              exit 0
+            fi
+            sleep 6
+          done
+          echo "Published Pages URL smoke test failed"
+          exit 1

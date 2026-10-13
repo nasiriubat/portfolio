@@ -52,4 +52,10 @@ function App(){
    </Suspense>
  </div>;
 }
-createRoot(document.getElementById('root')!).render(<React.StrictMode><App/></React.StrictMode>);
+// Story lives in the illustrated World Builder experience; preserve the existing
+// React Plain version and its complete CMS-backed data for instant reading.
+if (mode === 'story') {
+  window.location.replace(base + 'world-builder/' + (window.location.hash || ''));
+} else {
+  createRoot(document.getElementById('root')!).render(<React.StrictMode><App/></React.StrictMode>);
+}
