@@ -50,17 +50,17 @@ function SocialLinks({light=false}:{light?:boolean}){
 }
 
 const heroObjects=[
- {id:'research',title:'ScholarBro',subtitle:'Research discovery',type:'research',x:-245,y:-115,outX:-410,outY:-190,r:-14},
- {id:'systems',title:'Agent memory',subtitle:'Research and evaluation',type:'memory',x:280,y:-160,outX:390,outY:-225,r:16},
- {id:'travel',title:'NextEuroTrip',subtitle:'Journeys, intelligently planned',type:'travel',x:285,y:140,outX:430,outY:215,r:15},
- {id:'access',title:'WCAG Checker',subtitle:'Better accessibility',type:'access',x:-260,y:150,outX:-400,outY:240,r:-16}
+ {id:'research',title:'ScholarBro',subtitle:'Research discovery',type:'research',x:-74,y:-46,outX:-410,outY:-190,r:-11},
+ {id:'systems',title:'Agent memory',subtitle:'Research and evaluation',type:'memory',x:-43,y:24,outX:390,outY:-225,r:9},
+ {id:'travel',title:'NextEuroTrip',subtitle:'Journeys, intelligently planned',type:'travel',x:-51,y:-19,outX:430,outY:215,r:10},
+ {id:'access',title:'WCAG Checker',subtitle:'Better accessibility',type:'access',x:71,y:22,outX:-400,outY:240,r:-10}
 ] as const;
 function HeroTile({item,progress,staticView}:{item:typeof heroObjects[number];progress:MotionValue<number>;staticView:boolean}){
  const x=useTransform(progress,[0,.29,.7,1],[item.x,0,0,item.outX]);
  const y=useTransform(progress,[0,.29,.7,1],[item.y,0,0,item.outY]);
  const rotate=useTransform(progress,[0,.29,.7,1],[item.r,0,0,-item.r*1.5]);
  const scale=useTransform(progress,[0,.29,.7,1],[.76,1,1,.78]);
- const opacity=useTransform(progress,[0,.17,.72,1],[.48,1,1,0]);
+ const opacity=useTransform(progress,[0,.17,.72,1],[.7,1,1,0]);
  return <motion.div className={'s-hero-tile s-tile-'+item.type}
    style={staticView?undefined:{x,y,rotate,scale,opacity}} aria-hidden="true">
    <div className="s-hero-tile-head"><span className="s-tile-badge">
@@ -74,7 +74,7 @@ function HeroTile({item,progress,staticView}:{item:typeof heroObjects[number];pr
 }
 function Hero(){
  const ref=useRef<HTMLElement>(null),reduced=Boolean(useReducedMotion()),small=useSmallScreen();
- const {scrollYProgress}=useScroll({target:ref,offset:['start start','end start']});
+ const {scrollYProgress}=useScroll({target:ref,offset:['start start','end end']});
  const lift=useTransform(scrollYProgress,[0,.66,1],[0,0,-85]);
  const fade=useTransform(scrollYProgress,[0,.75,1],[1,1,.1]);
  return <section className="s-hero" id="home" ref={ref}>
