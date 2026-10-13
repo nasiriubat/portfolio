@@ -388,7 +388,7 @@
  .s-hero-name{font-size:clamp(70px,10vw,115px);margin:24px 0}
  .s-hero-desc{max-width:720px}
  .s-hero-composition{height:350px;min-height:0;width:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;perspective:none}
- .s-hero-tile{position:relative;inset:auto!important;width:auto!important;min-height:139px;opacity:1!important;transform:none!important}
+ .s-hero-tile{position:relative;inset:auto!important;width:auto!important;min-height:139px}
  .s-composition-label,.s-hero-orbit,.s-composition-foot{display:none}
  .s-hero-bottom{bottom:20px}
  .s-degree-scroll,.s-service-scroll,.s-research-scroll{height:auto;min-height:0}
