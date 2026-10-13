@@ -48,6 +48,19 @@ try{
   assert((await page.locator('.s-service-card').count())===3,label+' missing services');
   assert((await page.locator('.s-hero-tile').count())===4,label+' missing hero assembly parts');
   assert((await page.locator('.j-world,.j-three,canvas,.s-character').count())===0,label+' legacy character/road/3D artifact still visible');
+  if(label==='mobile'){
+   const tile=page.locator('.s-hero-tile').first();
+   await tile.scrollIntoViewIfNeeded();
+   await page.waitForTimeout(950);
+   const opacity=await tile.evaluate(el=>Number(getComputedStyle(el).opacity));
+   assert(opacity>.9,'Mobile story tile did not reveal: '+opacity);
+   const animated=await tile.evaluate(el=>el.hasAttribute('style')&&el.style.transform.length>0);
+   assert(animated,'Mobile story tile missing its motion transform');
+   await page.locator('.s-mobile-art').first().scrollIntoViewIfNeeded();
+   await page.waitForTimeout(1000);
+   const artOpacity=await page.locator('.s-mobile-art').first().evaluate(el=>Number(getComputedStyle(el).opacity));
+   assert(artOpacity>.9,'Mobile project art did not reveal: '+artOpacity);
+  }
   await overflow(page,label+' initial');
   await screenshot(page,'assembly-'+label+'-hero');
   if(width>900&&!reduced){

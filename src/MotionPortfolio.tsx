@@ -55,14 +55,14 @@ const heroObjects=[
  {id:'travel',title:'NextEuroTrip',subtitle:'Journeys, intelligently planned',type:'travel',x:-51,y:-19,outX:430,outY:215,r:10},
  {id:'access',title:'WCAG Checker',subtitle:'Better accessibility',type:'access',x:71,y:22,outX:-400,outY:240,r:-10}
 ] as const;
-function HeroTile({item,progress,staticView}:{item:typeof heroObjects[number];progress:MotionValue<number>;staticView:boolean}){
+function HeroTile({item,progress,staticView,mobile}:{item:typeof heroObjects[number];progress:MotionValue<number>;staticView:boolean;mobile:boolean}){
  const x=useTransform(progress,[0,.29,.7,1],[item.x,0,0,item.outX]);
  const y=useTransform(progress,[0,.29,.7,1],[item.y,0,0,item.outY]);
  const rotate=useTransform(progress,[0,.29,.7,1],[item.r,0,0,-item.r*1.5]);
  const scale=useTransform(progress,[0,.29,.7,1],[.76,1,1,.78]);
  const opacity=useTransform(progress,[0,.17,.72,1],[.7,1,1,0]);
  return <motion.div className={'s-hero-tile s-tile-'+item.type}
-   style={staticView?undefined:{x,y,rotate,scale,opacity}} aria-hidden="true">
+   style={staticView?undefined:{x,y,rotate,scale,opacity}} initial={mobile?{opacity:0,y:25,scale:.94}:false} whileInView={mobile?{opacity:1,y:0,scale:1}:undefined} viewport={{once:true,amount:.15}} transition={{duration:.65,ease}} aria-hidden="true">
    <div className="s-hero-tile-head"><span className="s-tile-badge">
       {item.type==='travel'?<Route size={17}/>:item.type==='access'?<ShieldCheck size={17}/>:item.type==='memory'?<Network size={17}/>:<BookOpen size={17}/>}
      </span><span className="s-tile-corner">↗</span></div>
@@ -96,7 +96,7 @@ function Hero(){
      <div className="s-hero-orbit s-orbit-a" aria-hidden="true"/>
      <div className="s-hero-orbit s-orbit-b" aria-hidden="true"/>
      <div className="s-composition-label"><span>SELECTED WORK</span><strong>Designed. Built. Researched.</strong></div>
-     {heroObjects.map(item=><HeroTile key={item.id} item={item} progress={scrollYProgress} staticView={reduced||small}/>)}
+     {heroObjects.map(item=><HeroTile key={item.id} item={item} progress={scrollYProgress} staticView={reduced||small} mobile={small&&!reduced}/>)}
      <div className="s-composition-foot" aria-hidden="true"><span>FOUR SYSTEMS / ONE WAY OF THINKING</span><Layers3 size={16}/></div>
     </div>
    </div>
@@ -105,7 +105,7 @@ function Hero(){
  </section>;
 }
 
-function FoldedDegree({entry,index,progress,staticView}:{entry:typeof education[number];index:number;progress:MotionValue<number>;staticView:boolean}){
+function FoldedDegree({entry,index,progress,staticView,mobile}:{entry:typeof education[number];index:number;progress:MotionValue<number>;staticView:boolean;mobile:boolean}){
  const dir=index===0?-1:1;
  const x=useTransform(progress,[0,.32,.72,1],[dir*205,0,0,dir*250]);
  const y=useTransform(progress,[0,.3,.72,1],[52,0,0,-72]);
@@ -113,7 +113,7 @@ function FoldedDegree({entry,index,progress,staticView}:{entry:typeof education[
  const rotateZ=useTransform(progress,[0,.32,.72,1],[dir*10,0,0,dir*-14]);
  const opacity=useTransform(progress,[0,.16,.81,1],[.25,1,1,.06]);
  return <motion.article className={'s-degree-card s-degree-'+index}
-   style={staticView?undefined:{x,y,rotateY,rotateZ,opacity}}>
+   style={staticView?undefined:{x,y,rotateY,rotateZ,opacity}} initial={mobile?{opacity:0,y:36,rotateX:-9}:false} whileInView={mobile?{opacity:1,y:0,rotateX:0}:undefined} viewport={{once:true,amount:.18}} transition={{duration:.75,ease}}>
   <div className="s-degree-top"><div className="s-degree-insignia"><GraduationCap size={23}/></div><span>{String(index+1).padStart(2,'0')} / ACADEMIC FOUNDATION</span></div>
   <span className="s-degree-period">{entry.period}</span>
   <h3>{entry.degree}</h3>
@@ -132,7 +132,7 @@ function Education(){
     <div className="s-chapter-heading"><h2>Curiosity had<br/><em>to start somewhere.</em></h2>
      <p>Two degrees, years of experimentation, and a habit of asking how complex systems actually work.</p></div>
     <div className="s-degrees"><div className="s-fold-line" aria-hidden="true"/>
-     {education.map((entry,index)=><FoldedDegree key={entry.institution} entry={entry} index={index} progress={scrollYProgress} staticView={reduced||small}/>)}
+     {education.map((entry,index)=><FoldedDegree key={entry.institution} entry={entry} index={index} progress={scrollYProgress} staticView={reduced||small} mobile={small&&!reduced}/>)}
     </div>
    </div>
   </div></div>
@@ -255,9 +255,18 @@ function ProjectStage({p,index,count,progress,active}:{p:Project;index:number;co
 function MobileProject({p,index}:{p:Project;index:number}){
  const theme=themes[p.slug]||{number:'0'+(index+1),tag:p.category,headline:'',color:'azure'};
  const live=publicLink(p);
+ const reduced=Boolean(useReducedMotion());
  return <InView className={'s-mobile-product s-theme-'+theme.color}>
   <div className="s-project-index">{theme.number} / {String(featured.length).padStart(2,'0')} · {theme.tag}</div>
-  <div className="s-mobile-art"><ProjectCanvas p={p}/></div>
+  <motion.div className="s-mobile-art" initial={reduced?false:{opacity:.45,scale:.92,y:24}} whileInView={reduced?undefined:{opacity:1,scale:1,y:0}} viewport={{once:true,amount:.2}} transition={{duration:.8,ease}}><ProjectCanvas p={p}/></motion.div>
+  <div className="s-mobile-assembly" aria-label="Project development journey">
+   {['Explore the problem','Build the product','See the result'].map((step,i)=>
+    <motion.span key={step} initial={reduced?false:{opacity:0,y:14,scale:.96}}
+     whileInView={reduced?undefined:{opacity:1,y:0,scale:1}} viewport={{once:true,amount:.3}}
+     transition={{duration:.45,delay:i*.13,ease}}>
+     <b>{String(i+1).padStart(2,'0')}</b>{step}
+    </motion.span>)}
+  </div>
   <h3>{p.title}</h3><p>{p.description}</p>
   <div className="s-pills">{(p.stack||[]).slice(0,4).map(t=><span key={t}>{t}</span>)}</div>
   <div className="s-stage-links"><a href={storyPath(p.slug)}>Case study <ArrowUpRight size={17}/></a>
@@ -312,7 +321,7 @@ const researchNodes=[
  {name:'Reasoning',label:'Agents · tools · plans',icon:Network},
  {name:'Evaluation',label:'Reliability · evidence',icon:ShieldCheck}
 ];
-function ResearchNode({item,index,progress,staticView}:{item:typeof researchNodes[number];index:number;progress:MotionValue<number>;staticView:boolean}){
+function ResearchNode({item,index,progress,staticView,mobile}:{item:typeof researchNodes[number];index:number;progress:MotionValue<number>;staticView:boolean;mobile:boolean}){
  const offsets=[[-170,105,13],[0,-155,-11],[10,185,9],[0,-160,-10],[170,103,11]];
  const a=offsets[index];
  const x=useTransform(progress,[0,.28,.75,1],[a[0],0,0,-a[0]]);
@@ -320,7 +329,7 @@ function ResearchNode({item,index,progress,staticView}:{item:typeof researchNode
  const rotate=useTransform(progress,[0,.28,.75,1],[a[2],0,0,-a[2]]);
  const opacity=useTransform(progress,[0,.16,.78,1],[.2,1,1,.35]);
  const Icon=item.icon;
- return <motion.div className={'s-research-node s-research-node-'+index} style={staticView?undefined:{x,y,rotate,opacity}}>
+ return <motion.div className={'s-research-node s-research-node-'+index} style={staticView?undefined:{x,y,rotate,opacity}} initial={mobile?{opacity:0,x:-24}:false} whileInView={mobile?{opacity:1,x:0}:undefined} viewport={{once:true,amount:.2}} transition={{duration:.6,delay:index*.07,ease}}>
   <span className="s-node-number">0{index+1}</span>
   <div className="s-node-icon"><Icon size={28}/></div>
   <strong>{item.name}</strong><small>{item.label}</small>
@@ -338,7 +347,7 @@ function Research(){
      <p>I research agent memory, retrieval, reproducibility, and reliability. Here is how the building blocks relate to each other.</p></div>
     <div className="s-research-pipeline">
      <motion.div className="s-research-connector" aria-hidden="true" style={reduced||small?undefined:{scaleX:line}}/>
-     {researchNodes.map((item,i)=><ResearchNode key={item.name} item={item} index={i} progress={scrollYProgress} staticView={reduced||small}/>)}
+     {researchNodes.map((item,i)=><ResearchNode key={item.name} item={item} index={i} progress={scrollYProgress} staticView={reduced||small} mobile={small&&!reduced}/>)}
     </div>
     <div className="s-research-bottom">CONTEXT IN <span>→</span> USEFUL, TESTABLE SYSTEMS OUT</div>
    </div>
@@ -352,13 +361,13 @@ function Research(){
   </div>
  </section>;
 }
-function ServiceCard({item,index,progress,staticView}:{item:typeof capabilities[number];index:number;progress:MotionValue<number>;staticView:boolean}){
+function ServiceCard({item,index,progress,staticView,mobile}:{item:typeof capabilities[number];index:number;progress:MotionValue<number>;staticView:boolean;mobile:boolean}){
  const startX=[250,0,-250][index],spin=[-18,0,18][index];
  const x=useTransform(progress,[0,.35,.75,1],[startX,0,0,-startX*.6]);
  const y=useTransform(progress,[0,.35,.75,1],[32,0,0,-30]);
  const rotate=useTransform(progress,[0,.35,.75,1],[spin,0,0,-spin]);
  const opacity=useTransform(progress,[0,.13,.85,1],[.25,1,1,.42]);
- return <motion.article className="s-service-card" style={staticView?undefined:{x,y,rotate,opacity}}>
+ return <motion.article className="s-service-card" style={staticView?undefined:{x,y,rotate,opacity}} initial={mobile?{opacity:0,y:40,scale:.96}:false} whileInView={mobile?{opacity:1,y:0,scale:1}:undefined} viewport={{once:true,amount:.2}} transition={{duration:.7,delay:index*.08,ease}}>
    <span className="s-service-number">{item.number} <ArrowUpRight size={19}/></span>
    <div className="s-service-icon">{index===0?<Code2 size={35}/>:index===1?<Network size={35}/>:<BookOpen size={35}/>}</div>
    <h3>{item.title}</h3><p>{item.details}</p>
@@ -374,7 +383,7 @@ function Services(){
     <Eyebrow index="05">EXPERTISE / WHAT I CAN BUILD</Eyebrow>
     <div className="s-chapter-heading"><h2>Different disciplines.<br/><em>One connected skill set.</em></h2>
      <p>From full-stack product delivery to agent-based tools and careful experimental research.</p></div>
-    <div className="s-service-grid">{capabilities.map((item,i)=><ServiceCard key={item.number} item={item} index={i} progress={scrollYProgress} staticView={reduced||small}/>)}</div>
+    <div className="s-service-grid">{capabilities.map((item,i)=><ServiceCard key={item.number} item={item} index={i} progress={scrollYProgress} staticView={reduced||small} mobile={small&&!reduced}/>)}</div>
    </div>
   </div></div>
   <div className="s-wrap s-skills-below"><span className="s-micro">TOOLS & TECHNOLOGIES</span>
