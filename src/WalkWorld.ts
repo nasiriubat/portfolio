@@ -291,7 +291,7 @@ export function mountWorld(host:HTMLDivElement,progress:WalkProgress,onFailure:(
   const isMobile=host.clientWidth<720;
   const overview=progress.overview;
   const offset=overview?new THREE.Vector3(7,42,37):
-    radial.multiplyScalar(isMobile?18:14).addScaledVector(tangent,isMobile?-6:-8).add(new THREE.Vector3(0,isMobile?17:12));
+    radial.clone().multiplyScalar(isMobile?18:14).addScaledVector(tangent,isMobile?-6:-8).add(new THREE.Vector3(0,isMobile?17:12));
   const destinationPosition=overview?offset:at.clone().add(offset);
   camera.position.lerp(destinationPosition,1-Math.exp(-dt*2.6));
   const center=overview?new THREE.Vector3(0,0,0):at.clone().addScaledVector(radial,isMobile?2.3:2.15).add(new THREE.Vector3(0,1.55,0));
