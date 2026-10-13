@@ -35,6 +35,9 @@ jobs:
       - name: Capture desktop/mobile previews and check overflow
         if: github.event_name == 'pull_request'
         run: npm run test:visual
+      - name: Review the World Builder experience in Chromium
+        if: github.event_name == 'pull_request'
+        run: npm run test:world-builder
       - name: Upload visual preview screenshots
         if: always() && github.event_name == 'pull_request'
         uses: actions/upload-artifact@v4
