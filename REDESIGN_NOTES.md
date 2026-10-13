@@ -1,56 +1,27 @@
-# Portfolio — storytelling and plain experiences
+# Portfolio redesign notes
 
-## Visitor entry points
+## Current primary experience
 
-- **Interactive storytelling (default):** `https://nasiriubat.github.io/portfolio/`
-- **Plain, content-first portfolio:** `https://nasiriubat.github.io/portfolio/?view=plain`
-- `?view=story` is also accepted. The persistent header toggles between views.
-- Both experiences share the **same CMS-managed projects/publications** and verified professional background.
-- Chapter hashes work after each lazy-loaded view mounts (for example, `?view=plain#projects`).
+The homepage and `?view=story` now render a **genuine WebGL Three.js walkthrough**, not the older flat illustrated World Builder. The character is a deliberately cartoonish miniature and walks between seven themed 3D dioramas. React/Motion handle chapter transitions. Scroll controls both the character's world position and camera; the chapter rail and previous/next buttons offer alternatives to scrolling.
 
-## Design direction
+- Live homepage: `https://nasiriubat.github.io/portfolio/`
+- Plain view: `https://nasiriubat.github.io/portfolio/?view=plain`
+- Former illustrated design retained: `https://nasiriubat.github.io/portfolio/world-builder/`
 
-The interactive view is an original warm, illustrated engineering workspace with project-specific artifacts, a question → system → evidence scroll narrative, three roomy product stories, a project index, research publications, work history, education, certifications and contact.
+The separate **Plain** view uses the same CMS data without WebGL. The 3D experience includes WebGL fallback and reduced-motion support. Links, featured project dialogs, research, education, career and contact are backed by existing verified content.
 
-David Heckhoff's portfolio was an **inspiration for storytelling and craft, not a component or asset source**. No proprietary visuals or source modules were copied.
+## Design and accessibility
 
-**Do not restore:** random 3D monograms, tech-brag captions, unnecessary scroll-jacking, cramped horizontal galleries, placeholder achievements, or links to private GitHub repositories.
+The 3D world is a miniature explorable scene rather than a photo or video backdrop. It uses real Three.js mesh geometry, lighting, shadows, islands and a simple skeletal-like animated cartoon body. It is intentionally not a high-poly rigged character model. The camera follows scroll progress but does not trap scroll or disable normal browser navigation.
 
-## Architecture
+The walkthrough is an optional enhancement to the content-first Plain view. Key information and all projects are available in Plain even if the browser cannot render WebGL.
 
-| File | Purpose |
-| --- | --- |
-| `src/main.tsx` | Shared navigation and URL mode resolution; lazy loads one of two views |
-| `src/StoryPortfolio.tsx` | Story chapter composition and live project/research mapping |
-| `src/StoryStudio.tsx` | Original pointer-responsive development workspace with linked product artifacts |
-| `src/StoryNarrative.tsx` | Scroll-controlled process chapter and three illustrative product workflows |
-| `src/story.css` | Story's responsive visual design |
-| `src/PlainPortfolio.tsx` | No-animation catalog of all verified portfolio content |
-| `src/plain.css` | Plain mode's clean visual layout |
-| `src/experience.css` | Global theme, accessibility and mode navigation |
-| `src/content.ts` | Loads CMS project/publication JSON, deduplicates known aliases and hides private links |
-| `src/PortfolioData.ts` | Experience, education, certifications and capabilities |
-| `scripts/generate-pages.mjs` | Creates case-study pages and sitemap from CMS project records |
-| `scripts/visual-check.mjs` | Production browser testing and visual snapshots |
+## Content and verification
 
-The plain mode is a separate, lazy-loaded view. It doesn't require Three.js, and the superseded WebGL components have been removed.
+CMS project files are under `content/projects/*.json`, and publications under `content/publications/*.json`. The same source data is used by the main React pages and generated case-study pages. Keep project information accurate and avoid exposing private repositories.
 
-## Content editing
+Pre-release checks: `npm run build`, `npm run test:visual` and `npm run test:world-builder`. Inspect screenshot artifacts and verify the public GitHub Pages URL after merging. See `README.md` for development and architecture details.
 
-Projects and publications are edited through **Pages CMS** using `.pages.yml` and JSON files in:
-- `content/projects/*.json`
-- `content/publications/*.json`
+## Older components
 
-Editing these files on `main` triggers the Pages build. Titles, descriptions, technologies, features and workflows flow into site and case-study pages. A publication is displayed only if it has both a title and a URL. Do not claim a research output is peer-reviewed unless verified.
-
-Illustrated workflows on the story page are **purpose-built concept illustrations**, not screenshots or fabricated product results. When genuine screenshots are ready to share, integrate them without exposing private data.
-
-## Pre-release quality gate
-
-`npm run build` and `npm run test:visual` must pass on the PR head. The PR workflow uploads `portfolio-visual-preview` screenshot artifacts. Review at least the desktop and mobile hero, each of the three featured projects, process interactions, research and career, and the plain view.
-
-The automated checks cover direct Story/Plain links, actual mode switching, six viewport sizes, CV completeness, CMS content, internal case-study routes, navigation, scroll phase changes and private-link protection. Still review the browser visually before merging; a green build alone is not design approval.
-
-## Deploy
-
-GitHub Pages should use **GitHub Actions** as the source; the push-to-main workflow deploys `dist/`. Verify the published URL and built asset loading after merge. Preserve the `old-portfolio` backup branch.
+The old React story components (`StoryPortfolio.tsx`, `StoryStudio.tsx`, `StoryNarrative.tsx`) remain in the repository for reference but are no longer routed. `public/world-builder/` remains available at its legacy path. The Plain view remains independently maintained.

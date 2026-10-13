@@ -1,20 +1,7 @@
-# World Builder / portfolio
+# Legacy World Builder
 
-The interactive World Builder experience is served from `/portfolio/world-builder/`; the original React **Plain** version remains `/portfolio/?view=plain`.
+This is a **previous illustration-based portfolio**, intentionally preserved at `/portfolio/world-builder/` for comparison and rollback. It is not the default homepage. The default `/portfolio/` now opens the real Three.js walkthrough in React.
 
-## Build
-`npm run build` runs `scripts/generate-pages.mjs`, then `scripts/sync-worldbuilder-cms.mjs`, then TypeScript + Vite.
-The CMS bridge reads `content/projects/*.json` and `content/publications/*.json`, deduplicates known aliases, and generates `public/world-builder/assets/content-data.json`. Both portfolio experiences share the same editable CMS data.
+The legacy static files live in `public/world-builder/`. The build's CMS bridge still generates `public/world-builder/assets/content-data.json` from project and publication records. Its Playwright test remains available through `npm run test:world-builder`.
 
-## QA
-`npm run test:world-builder` uses Playwright Chromium to check 1440, 1024, 390, and 320 pixel widths, seven chapters, image loading, overflow, project detail dialog, filters, tabs, navigation, copy-email, published CMS, and Plain view. Screenshots are attached to PR workflow artifacts at `preview/world-builder/`. The normal `npm run test:visual` remains unchanged.
-
-## Design / technical fidelity
-This character-driven experience uses original flat illustration plus CSS perspective, layered scroll choreography, and interactive HTML. It is not a skeletal 3D character rig. The blue-white design is an original composition, taking inspiration from premium digital product sites. No screenshots of private products or private repository links are exposed.
-
-## Deploy
-GitHub Actions uploads Vite's dist folder, including `public/world-builder`. The standalone story link is `https://nasiriubat.github.io/portfolio/world-builder/`, while Plain remains at `https://nasiriubat.github.io/portfolio/?view=plain`. Confirm GitHub Pages deployment status after merging before advertising the URL.
-
-## Homepage rollout
-
-The primary `/portfolio/` and `/portfolio/?view=story` routes redirect client-side to `/portfolio/world-builder/` and preserve section fragments. The existing React Plain view continues at `/portfolio/?view=plain` and is unaffected. Story's Plain toggle returns to the original React Plain version. The generated sitemap lists the story route.
+The Plain portfolio is accessible at `/portfolio/?view=plain`. For the new 3D experience, see `README.md`, `src/WalkPortfolio.tsx` and `src/WalkWorld.ts`.

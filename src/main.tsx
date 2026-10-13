@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { ArrowUpRight, Menu, X } from 'lucide-react';
 import './experience.css';
 
-const StoryPortfolio=lazy(()=>import('./StoryPortfolio'));
+const StoryPortfolio=lazy(()=>import('./WalkPortfolio'));
 const PlainPortfolio=lazy(()=>import('./PlainPortfolio'));
 const base=import.meta.env.BASE_URL;
 const params=new URLSearchParams(window.location.search);
@@ -16,7 +16,7 @@ function Navigation(){
   const sections=plain?[
     {label:'Projects',id:'projects'},{label:'Research',id:'research'},{label:'Experience',id:'experience'},{label:'Contact',id:'contact'}
   ]:[
-    {label:'Story',id:'start'},{label:'Work',id:'work'},{label:'Research',id:'research'},{label:'About',id:'about'},{label:'Contact',id:'contact'}
+    {label:'Home',id:'home'},{label:'Education',id:'education'},{label:'Experience',id:'experience'},{label:'Projects',id:'projects'},{label:'Research',id:'research'},{label:'Contact',id:'contact'}
   ];
   return <>
     <a className="skip-link" href={plain?'#projects':'#work'}>Skip to projects</a>
@@ -46,16 +46,10 @@ function Navigation(){
 }
 function App(){
  return <div className={mode==='plain'?'experience-root plain-root':'experience-root story-root'}>
-   <Navigation/>
+   {mode==='plain'&&<Navigation/>}
    <Suspense fallback={<main className="experience-loading" role="status">Loading portfolio…</main>}>
      {mode==='plain'?<PlainPortfolio/>:<StoryPortfolio/>}
    </Suspense>
  </div>;
 }
-// Story lives in the illustrated World Builder experience; preserve the existing
-// React Plain version and its complete CMS-backed data for instant reading.
-if (mode === 'story') {
-  window.location.replace(base + 'world-builder/' + (window.location.hash || ''));
-} else {
-  createRoot(document.getElementById('root')!).render(<React.StrictMode><App/></React.StrictMode>);
-}
+createRoot(document.getElementById('root')!).render(<React.StrictMode><App/></React.StrictMode>);
