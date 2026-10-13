@@ -1,62 +1,48 @@
 # Nasir Uddin Shuvo — Portfolio
 
-Two ways to explore the same portfolio:
+Two distinct, content-complete experiences use the same verified CMS records:
 
-- **3D circular journey:** https://nasiriubat.github.io/portfolio/
-- **Plain content-first version:** https://nasiriubat.github.io/portfolio/?view=plain
-- **Older illustrated design (legacy):** https://nasiriubat.github.io/portfolio/world-builder/
+- **Animated assembly story (default):** https://nasiriubat.github.io/portfolio/
+- **Plain portfolio:** https://nasiriubat.github.io/portfolio/?view=plain
 
-## Experience
+## Animated story
 
-The current journey is a miniature 3D island. A closed, curved road connects a developer studio, two universities, career offices, product exhibition, research laboratory, expertise workshop and contact station before returning home. The character follows the road, turns with the tangent and walks forward as the visitor reads and scrolls through each chapter.
+The animated portfolio tells the real story of a full-stack engineer and AI researcher through **scroll-linked transformation of content**. It does not use a character, virtual tour, cartoon objects, or WebGL.
 
-An eighth chapter closes the loop at the starting point. Visitors can select any chapter through the stop selector or next/previous controls and can zoom out with **View entire loop**.
+The seven chapters have deliberately different animation languages:
 
-This is **real WebGL geometry**, not a CSS visual trick. It uses Three.js with a custom cartoon character, detailed station models, dynamic lighting and a follow camera.
+1. **Introduction:** real product cards converge into a structured composition, then separate as the visitor advances.
+2. **Education:** two academic documents unfold in 3D perspective, then leave the scene; certifications remain readable.
+3. **Experience:** a career rail draws progressively through four verified roles and technologies.
+4. **Projects:** four CMS projects (ScholarBro, NextEuroTrip, WCAG Checker, LeaveHub) each assemble from four independent parts and disassemble as the next product appears. Other projects have full case-study links.
+5. **Research:** five connected stages (sources, retrieval, memory, reasoning and evaluation) move from scattered to ordered positions; real publications appear below.
+6. **Expertise:** three capability cards fan out from a shared deck with the technologies listed separately.
+7. **Contact:** the final email card settles into view with a copy button, email action and professional social links.
 
-### Content-first by design
+**Design:** Stripe-inspired white/ice-blue/electric-blue/navy identity, polished typography and glass-free editorial cards. The Plain view retains its previous layout/content with a color-only blue-white refresh.
 
-Desktop: a full-height scrollable content column sits **beside** the 3D world.
-Mobile: the world is in the upper viewport and the scrollable reading column sits **below** it.
-There are no opaque floating cards layered over content. Every section is allowed its full height. Longer sections such as projects and career scroll naturally inside the reading column.
+## Technology and CMS
 
-The 3D story includes:
-1. Introduction, overview and working social links.
-2. Both education records and expandable certifications.
-3. All four employment records, descriptions and technology tags.
-4. Four featured CMS projects with key features, stacks, expandable workflow descriptions, case studies and public demo links; all other CMS projects are available in an expandable catalog.
-5. Research themes and linked publication records.
-6. Expertise and technology capabilities.
-7. Contact with email, clipboard and professional links.
-8. A full-circle finale and restart.
+React 18 · Vite · TypeScript · Motion · Lucide; no Three.js or custom character rigs.
 
-The original Plain experience remains separate and **never requires WebGL**.
+- `src/MotionPortfolio.tsx`: separate scroll narratives and real data-driven project panels.
+- `src/motion.css`: layout, interactions, premium blue-white palette and responsive behavior.
+- `src/PlainPortfolio.tsx`, `src/plain.css`: accessible text-first alternative and same CMS content.
+- `src/PortfolioData.ts`: verified education, roles, expertise and certifications.
+- `content/projects/*.json`, `content/publications/*.json`: editable through Pages CMS.
+- `scripts/generate-pages.mjs`: generates static case-study HTML and sitemap from CMS records.
+- `scripts/visual-check.mjs`: Playwright visual and functional tests.
 
-## Development
+Public links are displayed only when explicitly available and are filtered to avoid private GitHub source links. Conceptual illustrations are not presented as screenshots of products or measured performance.
+
+## Build and release
 
 ```sh
 npm install
-npm run dev
 npm run build
 npm run test:visual
-npm run test:world-builder
 ```
 
-Important files:
+Pull requests run the production build and browser QA at 1440, 1024, 390 and 320px, capturing each major motion stage and Plain screenshots. GitHub Actions deploys `dist/` on pushes to `main` and then checks both public entrypoints.
 
-- `src/WalkWorld.ts` Closed CatmullRom road, stations, animated traveler and camera.
-- `src/WalkPortfolio.tsx` Accessible story chapters and CMS-backed product content.
-- `src/walk.css` Non-overlapping responsive split layout.
-- `src/PlainPortfolio.tsx` Independent, static reading experience.
-- `src/PortfolioData.ts` Education, experience and capabilities.
-- `content/projects/*.json` CMS project data.
-- `content/publications/*.json` CMS research outputs.
-- `scripts/visual-check.mjs` Playwright QA across desktop, laptop, mobile and 320px, including layout separation, all chapters, project details, navigation, complete loop and plain version.
-
-## Security and claims
-
-Do not publish private project repository URLs. Public demo links appear only for explicitly public non-GitHub sites. Project card visuals are original conceptual art rather than screenshots or fabricated performance evidence. The Plain view remains accessible from every scene and is the default fallback when WebGL is unavailable.
-
-## Deployment
-
-GitHub Actions tests pull requests and produces screenshot artifacts. Merging to `main` triggers a GitHub Pages deployment. Build and browser checks must pass before a version is merged.
+The story respects reduced-motion settings, simplifies pinned sequences on narrow screens, and keeps a persistent Plain switch, semantic sections, direct navigation and interactive links accessible.
