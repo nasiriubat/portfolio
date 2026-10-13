@@ -159,6 +159,6 @@
  background:radial-gradient(ellipse at 87% 13%,#e1efff 0%,transparent 46%),linear-gradient(#f7fbff,#fff);
  z-index:0}
 .plain-root .global-header,.plain-root .plain-portfolio{position:relative;z-index:1}
-.plain-root .global-header{position:fixed}
+.plain-root .global-header{position:fixed;z-index:200}
 .plain-hero-aside>div strong{color:#153765}
 .plain-project:focus-within{border-color:#8bb8ff}
