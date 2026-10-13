@@ -171,7 +171,7 @@ export default function WalkPortfolio(){
   const destination=sections.current[bounded];
   if(!destination)return;
   // The last stop and the first stop share the same world coordinates.
-  if(bounded===0 && root.scrollTop>sections.current[6]?.offsetTop){
+  if(bounded===0 && root.scrollTop>(sections.current[6]?.offsetTop??Infinity)){
    status.current.current=0;root.scrollTo({top:0,behavior:'instant'});setActive(0);return;
   }
   root.scrollTo({top:destination.offsetTop,behavior:reduced.current?'instant':'smooth'});
