@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Check, Copy, Github, Linkedin, Mail } from 'lucide-react';
 import { placed, publications, displayTitle, publicLink, linkLabel, caseStudy, type Project } from './content';
 import { profile, experience, education, certifications, asset } from './PortfolioData';
 import {
@@ -123,8 +124,53 @@ function ProjectCard({ p }: { p: Project }) {
   );
 }
 
+async function copyText(text: string): Promise<boolean> {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    const area = document.createElement('textarea');
+    area.value = text;
+    area.setAttribute('readonly', '');
+    area.style.position = 'fixed';
+    area.style.opacity = '0';
+    document.body.appendChild(area);
+    area.select();
+    const ok = document.execCommand('copy');
+    area.remove();
+    return ok;
+  }
+}
+
+function useCopyEmail(email: string) {
+  const [toast, setToast] = useState('');
+  const timer = useRef<number>();
+  const copy = useCallback(async () => {
+    const ok = await copyText(email);
+    setToast(ok ? 'Email copied: ' + email : 'Copy failed. The address is ' + email);
+    window.clearTimeout(timer.current);
+    timer.current = window.setTimeout(() => setToast(''), 2600);
+  }, [email]);
+  useEffect(() => () => window.clearTimeout(timer.current), []);
+  return { toast, copy };
+}
+
+function SocialIcons({ onCopy, copied }: { onCopy: () => void; copied: boolean }) {
+  return (
+    <div className="s-socials">
+      <button type="button" className="s-icon" onClick={onCopy} aria-label={'Copy email address ' + profile.email} title="Copy email">
+        {copied ? <Check size={20} aria-hidden="true" /> : <Mail size={20} aria-hidden="true" />}
+      </button>
+      <a className="s-icon" href={profile.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub profile" title="GitHub"><Github size={20} aria-hidden="true" /></a>
+      <a className="s-icon" href={profile.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile" title="LinkedIn"><Linkedin size={20} aria-hidden="true" /></a>
+    </div>
+  );
+}
+
 export default function StoryPortfolio() {
   const active = useStoryBehaviour();
+  const { toast, copy } = useCopyEmail(profile.email);
+  const copied = toast.startsWith('Email copied');
   const on = (id: SectionId) => (active === id ? 'on' : '');
   const spotlights = placed('spotlight');
   const cards = placed('card');
@@ -163,10 +209,11 @@ export default function StoryPortfolio() {
             <p className="s-intro">{profile.intro}</p>
             <div className="s-actions">
               <a className="btn-p" href="#work">See selected work <Arrow d="M5 12h14M13 6l6 6-6 6" /></a>
-              <a className="btn-s" href={'mailto:' + profile.email}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m3 7 9 6 9-6"></path></svg>
-                {profile.email}
-              </a>
+              <a className="btn-s" href="#contact">Get in touch</a>
+            </div>
+            <div className="s-hero-social">
+              <SocialIcons onCopy={copy} copied={copied} />
+              <span className="s-email-text mono">{profile.email}</span>
             </div>
             {profile.status && <div className="s-status"><i></i><span>{profile.status}</span></div>}
           </div>
@@ -334,10 +381,16 @@ export default function StoryPortfolio() {
               <span className="eb">Let's connect</span>
               <h2>{profile.contactTitle}</h2>
               <p className="s-lead" style={{ maxWidth: '32em' }}>{profile.contactText}</p>
-              <div className="s-actions">
-                <a className="btn-p" href={'mailto:' + profile.email}>{profile.email}</a>
-                <a className="btn-s" href={profile.github} target="_blank" rel="noopener noreferrer">GitHub</a>
-                <a className="btn-s" href={profile.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+              <div className="s-email-box">
+                <span className="s-email-text s-email-lg">{profile.email}</span>
+                <button type="button" className="btn-p" onClick={copy}>
+                  {copied ? <Check size={18} aria-hidden="true" /> : <Copy size={18} aria-hidden="true" />}
+                  {copied ? 'Copied' : 'Copy email'}
+                </button>
+              </div>
+              <div className="s-contact-links">
+                <SocialIcons onCopy={copy} copied={copied} />
+                <a href={'mailto:' + profile.email}>Or write an email ↗</a>
               </div>
             </div>
             <div style={{ position: 'relative', height: 300 }} aria-hidden="true"><ContactArt /></div>
@@ -348,10 +401,14 @@ export default function StoryPortfolio() {
       <footer className="s-footer">
         <div className="wrap">
           <span>© {new Date().getFullYear()} {profile.name}</span>
-          <a href={'mailto:' + profile.email} style={{ fontWeight: 500 }}>{profile.email}</a>
+          <span className="s-email-text">{profile.email}</span>
           <a href={base + '?view=plain'}>Plain view</a>
         </div>
       </footer>
+
+      <div className={'s-toast' + (toast ? ' show' : '')} role="status" aria-live="polite">
+        {toast && <><Check size={16} aria-hidden="true" />{toast}</>}
+      </div>
 
       <nav className="bnav" aria-label="Section navigation">
         <a className={on('top')} href="#top"><Icon><path d="m3 11 9-7 9 7"></path><path d="M5 10v10h14V10"></path></Icon><span>Home</span></a>

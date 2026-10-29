@@ -198,6 +198,22 @@ svg .sp,svg .flt,svg .scope{transform-box:fill-box;transform-origin:center}
   @keyframes plx2{from{transform:translateY(-60px) rotate(-4deg)}to{transform:translateY(60px) rotate(4deg)}}
 }
 
+
+/* email + social icons */
+.s-email-text{user-select:all;-webkit-user-select:all;cursor:text;color:var(--ink);overflow-wrap:anywhere}
+.s-hero-social{display:flex;flex-wrap:wrap;align-items:center;gap:14px 18px;padding-top:4px}
+.s-hero-social .s-email-text{font-size:14px;color:var(--dim)}
+.s-socials{display:flex;gap:10px}
+.pf .s-icon{width:44px;height:44px;border-radius:12px;border:1px solid #d9dce3;background:#fff;color:#3d4454;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;transition:border-color .2s,color .2s,background .2s,transform .2s}
+.pf .s-icon:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+.s-email-box{display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;padding:14px 14px 14px 20px;background:#fff;border:1px solid var(--line);border-radius:14px;max-width:560px}
+.s-email-lg{font-family:'Space Grotesk',sans-serif;font-size:clamp(18px,2.2vw,22px);font-weight:500;flex:1 1 220px}
+.pf .s-email-box .btn-p{border:0;cursor:pointer;font-family:inherit;height:44px}
+.s-contact-links{display:flex;flex-wrap:wrap;align-items:center;gap:16px 20px;font-weight:500;font-size:15px}
+.s-toast{position:fixed;left:50%;bottom:24px;z-index:70;display:flex;align-items:center;gap:8px;padding:12px 18px;border-radius:12px;background:var(--ink);color:#fff;font-size:14px;box-shadow:0 14px 32px -12px rgba(18,24,38,.45);opacity:0;transform:translate(-50%,12px);pointer-events:none;transition:opacity .2s,transform .2s;max-width:calc(100% - 32px)}
+.s-toast.show{opacity:1;transform:translate(-50%,0)}
+@media (max-width: 860px){.s-toast{bottom:calc(96px + env(safe-area-inset-bottom))}}
+
 /* bottom navigation (phones) */
 .bnav{display:none}
 @media (max-width: 860px){
