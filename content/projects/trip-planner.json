@@ -24,5 +24,9 @@
     "Vue 3",
     "Vite",
     "Tailwind CSS"
-  ]
+  ],
+  "placement": "card",
+  "order": 2,
+  "summary": "A Europe route planner for round trips, one-way journeys and base-based exploration, with deterministic day-by-day routing, curated destinations and a visited-map generator.",
+  "website": "https://nexteurotrip.com"
 }

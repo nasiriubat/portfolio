@@ -24,5 +24,8 @@
     "axe-core",
     "SQLite",
     "OpenAI API (optional)"
-  ]
+  ],
+  "placement": "card",
+  "order": 5,
+  "summary": "Crawls a site, renders each page in Playwright and checks WCAG 2.1 A/AA with axe-core: risk-scored reports, affected elements, PDF/CSV export and optional AI fixes."
 }

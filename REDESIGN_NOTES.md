@@ -1,5 +1,7 @@
 # Creative direction — Scroll Assembly Portfolio
 
+> October 2026: the Story view was rebuilt as a light, single-page design (see README). The notes below describe the earlier version and are kept for history.
+
 ## User-approved direction
 - **No characters, robots, roads or fictional dioramas.** The content itself moves.
 - **White, blue and navy.** No beige, sepia or newspaper palette.

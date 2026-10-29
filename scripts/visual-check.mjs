@@ -40,75 +40,35 @@ try{
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
   const response=await page.goto(BASE,{waitUntil:'domcontentloaded',timeout:25000});
   assert(response?.ok(),label+' HTTP response');
-  await page.locator('.s-hero-name').waitFor({state:'visible',timeout:16000});
-  await page.locator('.s-career-entry').first().waitFor({state:'attached'});
-  assert((await page.locator('.s-degree-card').count())===2,label+' missing degrees');
-  assert((await page.locator('.s-career-entry').count())===4,label+' missing careers');
-  assert((await page.locator('.s-research-node').count())===5,label+' missing research modules');
-  assert((await page.locator('.s-service-card').count())===3,label+' missing services');
-  assert((await page.locator('.s-hero-tile').count())===4,label+' missing hero assembly parts');
-  assert((await page.locator('.j-world,.j-three,canvas,.s-character').count())===0,label+' legacy character/road/3D artifact still visible');
-  if(label==='mobile'){
-   const tile=page.locator('.s-hero-tile').first();
-   await tile.scrollIntoViewIfNeeded();
-   await page.waitForTimeout(950);
-   const opacity=await tile.evaluate(el=>Number(getComputedStyle(el).opacity));
-   assert(opacity>.9,'Mobile story tile did not reveal: '+opacity);
-   const animated=await tile.evaluate(el=>el.hasAttribute('style')&&el.style.transform.length>0);
-   assert(animated,'Mobile story tile missing its motion transform');
-   await page.locator('.s-mobile-art').first().scrollIntoViewIfNeeded();
-   await page.waitForTimeout(1000);
-   const artOpacity=await page.locator('.s-mobile-art').first().evaluate(el=>Number(getComputedStyle(el).opacity));
-   assert(artOpacity>.9,'Mobile project art did not reveal: '+artOpacity);
-  }
+  await page.locator('.s-hero h1').waitFor({state:'visible',timeout:16000});
+  const site=JSON.parse(await (await import('node:fs/promises')).readFile('content/site.json','utf8'));
+  assert((await page.locator('.s-logo').innerText()).includes(site.name),label+' name missing from header');
+  assert((await page.locator('.s-hero-vis img').count())===1,label+' hero portrait missing');
+  assert((await page.locator('#work .frow').count())>=1,label+' spotlight projects missing');
+  assert((await page.locator('.tl li').count())===site.experience.length,label+' career entries missing');
+  assert((await page.locator('.s-edu article').count())===site.education.length,label+' education missing');
+  assert((await page.locator('.s-certs article').count())===site.certifications.length,label+' certifications missing');
+  assert((await page.locator('#research .pub').count())>=1,label+' publications missing');
+  assert((await page.locator('a[href*="github.com/nasiriubat/"]').count())===0,label+' private source repo linked');
   await overflow(page,label+' initial');
-  await screenshot(page,'assembly-'+label+'-hero');
-  if(width>900&&!reduced){
-   await place(page,'.s-hero',.43);await screenshot(page,'assembly-'+label+'-hero-assembled');
-   await place(page,'.s-hero',.91);await screenshot(page,'assembly-'+label+'-hero-breakup');
-   await place(page,'.s-degree-scroll',.47);await screenshot(page,'assembly-'+label+'-education');
-   await place(page,'#experience',.37);await screenshot(page,'assembly-'+label+'-career');
-   const count=await page.locator('.s-theater-stage').count();
-   assert(count>=3,label+' featured project stages missing');
-   for(let i=0;i<count;i++){
-    await place(page,'.s-project-scroll',(i+.38)/count);
-    const act=page.locator('.s-theater-stage[aria-hidden="false"]');
-    assert(await act.count()===1,label+' multiple active product stages');
-    const text=await act.locator('h3').innerText();
-    assert(text.trim().length>2,label+' active project title missing');
-    await screenshot(page,'assembly-'+label+'-product-'+(i+1));
-    const visible=await act.locator('.s-project-part-0').evaluate(el=>{
-      const rect=el.getBoundingClientRect();return rect.width>100&&rect.height>100;
-    });
-    assert(visible,label+' main product assembly missing');
-   }
-   await place(page,'.s-research-scroll',.47);await screenshot(page,'assembly-'+label+'-research');
-   await place(page,'.s-service-scroll',.43);await screenshot(page,'assembly-'+label+'-services');
-  }else{
-   await place(page,'#education');await screenshot(page,'assembly-'+label+'-education');
-   await place(page,'#projects');await screenshot(page,'assembly-'+label+'-projects');
-   assert((await page.locator('.s-mobile-product').count())>=3,label+' mobile projects missing');
-   await place(page,'#research');await screenshot(page,'assembly-'+label+'-research');
-   await place(page,'#services');await screenshot(page,'assembly-'+label+'-services');
+  await screenshot(page,'story-'+label+'-hero');
+  for(const id of ['work','experience','research','stack','contact']){
+   await place(page,'#'+id,.15);await screenshot(page,'story-'+label+'-'+id);
   }
-  await place(page,'#contact');await screenshot(page,'assembly-'+label+'-contact');
+  // tools rows must be scrollable by the visitor
+  const row=page.locator('.mrow-a');
+  const before=await row.evaluate(el=>el.scrollLeft);
+  await page.getByRole('button',{name:'Scroll tools right'}).click();
+  await page.waitForTimeout(700);
+  assert((await row.evaluate(el=>el.scrollLeft))>before,label+' tools arrows do not scroll');
+  if(width<=860){
+   const nav=page.getByRole('navigation',{name:'Section navigation'});
+   assert(await nav.isVisible(),label+' bottom navigation hidden on phone');
+   await nav.getByRole('link',{name:'Research'}).click();
+   await page.waitForTimeout(900);
+   assert((await nav.locator('a.on').innerText()).includes('Research'),label+' bottom navigation does not follow the section');
+  }
   await overflow(page,label+' after sections');
-  if(label==='desktop'){
-   await page.getByRole('button',{name:/view all .* other projects/i}).click();
-   assert((await page.locator('.s-other-card').count())>=7,'Show all projects button did not expand');
-   await page.getByRole('button',{name:'Copy email'}).click();
-   await page.waitForFunction(()=>document.querySelector('.s-copy-status')?.textContent?.trim().length>0,{timeout:6500});
-   assert((await page.locator('.s-copy-status').innerText()).includes('Email'),'Copy-email feedback missing');
-   await page.getByRole('navigation',{name:'Main sections'}).getByRole('link',{name:'Work'}).click();
-   await page.waitForTimeout(600);
-   assert((new URL(page.url()).hash)==='#projects','Navigation hash not working');
-  }
-  if(width<=390){
-   await page.getByRole('button',{name:'Open navigation'}).click();
-   await page.getByRole('navigation',{name:'Mobile sections'}).waitFor({state:'visible'});
-   await page.getByRole('navigation',{name:'Mobile sections'}).getByRole('link',{name:'Research'}).click();
-   assert(!await page.getByRole('navigation',{name:'Mobile sections'}).isVisible(),'Mobile nav failed to close');
-  }
   assert(errors.length===0,label+' JS errors: '+errors.join('; '));
   console.log('PASS ASSEMBLY',label);
   await context.close();
@@ -129,7 +89,7 @@ try{
   assert((await page.locator('.plain-project').count())>=8,label+' missing Plain projects');
   assert((await page.locator('.plain-job').count())===4,label+' missing Plain career');
   assert((await page.locator('.plain-degree-grid article').count())===2,label+' missing Plain education');
-  assert((await page.locator('.plain-cert-grid>div').count())>=5,label+' missing Plain certifications');
+  assert((await page.locator('.plain-cert-grid>a').count())>=5,label+' missing Plain certifications');
   assert((await page.getByRole('link',{name:'GitHub profile'}).count())===1,label+' Plain social links lost');
   const theme=await page.locator('.plain-portfolio').evaluate(el=>getComputedStyle(el).backgroundColor);
   assert(theme==='rgb(255, 255, 255)',label+' Plain remains beige: '+theme);

@@ -1,1 +1,14 @@
-{"title":"Knowlet","category":"AI application","status":"Selected work","url":"","description":"Explore documents and generate multi-speaker audio summaries.","featured":false}
+{
+  "title": "Knowlet",
+  "category": "AI application",
+  "status": "Selected work",
+  "url": "",
+  "description": "Explore documents and generate multi-speaker audio summaries.",
+  "featured": false,
+  "placement": "list",
+  "order": 5,
+  "summary": "Explore documents and generate multi-speaker audio summaries.",
+  "stack": [
+    "AI application"
+  ]
+}

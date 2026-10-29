@@ -1,0 +1,84 @@
+{
+  "name": "Nasir Uddin Shuvo",
+  "role": "Full-stack developer · AI researcher",
+  "location": "Tampere, Finland",
+  "headline": "I build software.",
+  "headlineAccent": "And investigate how it thinks.",
+  "intro": "Full-stack developer and Project Researcher at GPT Lab, Tampere University. I turn ambitious ideas into useful products and research more dependable AI systems.",
+  "status": "Now: researching agentic workflows and long-term memory for AI systems",
+  "photo": "/images/nasir.webp",
+  "email": "dev.nasirshuvo@gmail.com",
+  "github": "https://github.com/nasiriubat",
+  "linkedin": "https://www.linkedin.com/in/nasir-shuvo",
+  "researchTitle": "Engineering is the craft. Research asks why it works.",
+  "researchText": "I research agent memory, retrieval, reproducibility and reliability.",
+  "contactTitle": "Something in mind? Let's make it real.",
+  "contactText": "Looking for a full-stack developer, an AI engineering collaborator, or someone who cares about reliable systems? I'd love to hear what you're building.",
+  "capabilities": [
+    { "title": "Software products", "details": "React, Laravel, Python and end-to-end applications" },
+    { "title": "Agentic systems", "details": "Tools, retrieval, memory and multi-step reasoning" },
+    { "title": "Applied research", "details": "Evaluation, reliability and reproducible experiments" }
+  ],
+  "experience": [
+    {
+      "role": "Project Researcher",
+      "organization": "GPT Lab · Tampere University",
+      "location": "Tampere, Finland",
+      "period": "Jan 2026 — Present",
+      "summary": "I research agentic workflows and long-term memory for AI systems. My work combines prototype development with reproducible evaluation of retrieval, learning and system reliability.",
+      "technologies": ["AI agents", "Long-term memory", "RAG", "Evaluation"]
+    },
+    {
+      "role": "Research Assistant",
+      "organization": "GPT Lab · Tampere University",
+      "location": "Tampere, Finland",
+      "period": "Oct 2024 — Dec 2025",
+      "summary": "Built LLM-based tools and retrieval-augmented applications. Experimented with retrieval strategies, model orchestration and domain-specific research prototypes.",
+      "technologies": ["Python", "LangChain", "React", "LLMs"]
+    },
+    {
+      "role": "Software Developer",
+      "organization": "AutonomyBD Ltd.",
+      "location": "Dhaka, Bangladesh",
+      "period": "Oct 2022 — Jun 2023",
+      "summary": "Developed and extended business applications, built REST APIs, delivered new functionality and collaborated closely with front-end engineers.",
+      "technologies": ["Laravel", "PHP", "MySQL", "Node.js"]
+    },
+    {
+      "role": "Software Developer",
+      "organization": "Inilabs Network",
+      "location": "Dhaka, Bangladesh",
+      "period": "Feb 2021 — Sep 2022",
+      "summary": "Implemented customer-requested features, improved existing software, built APIs and provided ongoing application support and debugging.",
+      "technologies": ["PHP", "CodeIgniter", "REST APIs", "JavaScript"]
+    }
+  ],
+  "education": [
+    {
+      "degree": "Master's in Computing Sciences",
+      "institution": "Tampere University",
+      "place": "Tampere, Finland",
+      "period": "2023 — 2025",
+      "detail": "Software, Web and Cloud",
+      "url": "https://www.tuni.fi/en"
+    },
+    {
+      "degree": "BSc in Computer Science & Engineering",
+      "institution": "IUBAT",
+      "place": "Dhaka, Bangladesh",
+      "period": "2017 — 2021",
+      "detail": "CGPA 3.94 / 4.00",
+      "url": "https://iubat.edu"
+    }
+  ],
+  "certifications": [
+    { "title": "Model Context Protocol: Advanced Topics", "issuer": "Verified on Skilljar", "url": "https://verify.skilljar.com/c/kgqctiztmd9e" },
+    { "title": "Introduction to Model Context Protocol", "issuer": "Verified on Skilljar", "url": "https://verify.skilljar.com/c/be5wxep8iw4d" },
+    { "title": "Claude Code 101", "issuer": "Verified on Skilljar", "url": "https://verify.skilljar.com/c/acffmnf73c58" },
+    { "title": "GenAI in Software Engineering", "issuer": "GPT Lab · GAISE 2025", "url": "https://gpt-lab.eu/gaise-2025/" },
+    { "title": "Full Stack (MERN) Bootcamp", "issuer": "CodersDash", "url": "https://codersdash.com/tutor-certificate?cert_hash=ff9872e51b53c1cf" },
+    { "title": "SQL Intermediate", "issuer": "Sololearn", "url": "https://api2.sololearn.com/v2/certificates/CC-FLXZK2PX/image/jpg" }
+  ],
+  "skillsPrimary": ["Python", "JavaScript", "PHP", "React", "Next.js", "Node.js", "Express", "Laravel", "FastAPI", "Django", "Flask", "PostgreSQL", "MySQL", "MongoDB"],
+  "skillsSecondary": ["LangChain", "LangGraph", "MCP", "RAG", "Ollama", "Hugging Face", "n8n", "Agentic AI", "Docker", "Linux", "GCP", "Socket.IO", "REST APIs"]
+}

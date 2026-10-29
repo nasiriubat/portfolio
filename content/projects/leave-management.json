@@ -23,5 +23,8 @@
     "React",
     "TypeScript",
     "MySQL"
-  ]
+  ],
+  "placement": "spotlight",
+  "order": 4,
+  "summary": "Role-aware leave management with multi-step approvals, transactional balance calculations, accrual and carry-over policies, country holidays, team calendars, reports, 2FA, audit logs and GDPR tools."
 }

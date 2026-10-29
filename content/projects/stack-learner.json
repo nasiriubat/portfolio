@@ -24,5 +24,8 @@
     "Drizzle ORM",
     "Pyodide",
     "Playwright"
-  ]
+  ],
+  "placement": "list",
+  "order": 1,
+  "summary": "Full-stack and AI learning platform with runnable browser lessons, interview prep, capstone missions and guided API labs."
 }

@@ -1,1 +1,11 @@
-{"title":"ScholarBro","category":"Research platform","status":"Live product","url":"https://scholarbro.com","description":"Discover research and follow academic interests.","featured":true}
+{
+  "title": "ScholarBro",
+  "category": "Research platform",
+  "status": "Live product",
+  "url": "https://scholarbro.com",
+  "description": "Discover research and follow academic interests.",
+  "featured": true,
+  "placement": "card",
+  "order": 4,
+  "summary": "Discover research and follow academic interests. Follow an idea, find the research."
+}

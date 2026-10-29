@@ -2,6 +2,66 @@ media:
   input: public/images
   output: /images
 content:
+  - name: site
+    label: Profile & career
+    type: file
+    path: content/site.json
+    format: json
+    fields:
+      - { name: name, label: Full name, type: string, required: true }
+      - { name: role, label: Role line (small text above the headline), type: string }
+      - { name: location, label: Location, type: string }
+      - { name: headline, label: Headline, type: string }
+      - { name: headlineAccent, label: Headline (blue second line), type: string }
+      - { name: intro, label: Intro paragraph, type: text }
+      - { name: status, label: Current focus (green dot line), type: string }
+      - { name: photo, label: Portrait (transparent PNG/WebP works best), type: image }
+      - { name: email, label: Email, type: string }
+      - { name: github, label: GitHub URL, type: string }
+      - { name: linkedin, label: LinkedIn URL, type: string }
+      - { name: researchTitle, label: Research section title, type: string }
+      - { name: researchText, label: Research section text, type: text }
+      - { name: contactTitle, label: Contact section title, type: string }
+      - { name: contactText, label: Contact section text, type: text }
+      - name: capabilities
+        label: Capabilities (Plain view)
+        type: object
+        list: true
+        fields:
+          - { name: title, label: Title, type: string }
+          - { name: details, label: Details, type: string }
+      - name: experience
+        label: Experience
+        type: object
+        list: true
+        fields:
+          - { name: role, label: Role, type: string }
+          - { name: organization, label: Organization, type: string }
+          - { name: location, label: Location, type: string }
+          - { name: period, label: Period, type: string }
+          - { name: summary, label: Summary, type: text }
+          - { name: technologies, label: Technologies, type: string, list: true }
+      - name: education
+        label: Education
+        type: object
+        list: true
+        fields:
+          - { name: degree, label: Degree, type: string }
+          - { name: institution, label: Institution, type: string }
+          - { name: place, label: Place, type: string }
+          - { name: period, label: Period, type: string }
+          - { name: detail, label: Detail, type: string }
+          - { name: url, label: Institution URL, type: string }
+      - name: certifications
+        label: Certifications
+        type: object
+        list: true
+        fields:
+          - { name: title, label: Title, type: string }
+          - { name: issuer, label: Issuer / note, type: string }
+          - { name: url, label: Certificate URL, type: string }
+      - { name: skillsPrimary, label: Tools row 1 (languages, frameworks, databases), type: string, list: true }
+      - { name: skillsSecondary, label: Tools row 2 (AI and infrastructure), type: string, list: true }
   - name: projects
     label: Projects
     type: collection
@@ -10,11 +70,20 @@ content:
     format: json
     view:
       primary: title
+      fields: [title, placement, order]
     fields:
       - { name: title, label: Title, type: string, required: true }
       - { name: category, label: Category, type: string }
       - { name: status, label: Status, type: string }
       - { name: url, label: Live URL, type: string }
+      - { name: website, label: Public website (shown as a link; optional), type: string }
+      - name: placement
+        label: Placement on the Story page
+        type: select
+        options:
+          values: [spotlight, card, list, hidden]
+      - { name: order, label: Order within placement (1 = first), type: number }
+      - { name: summary, label: Short summary (cards and list; falls back to description), type: text }
       - { name: description, label: Description, type: text }
       - { name: featured, label: Featured, type: boolean }
       - name: features

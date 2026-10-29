@@ -20,5 +20,8 @@
     "JavaScript",
     "OpenAI API",
     "Chrome Scripting & Storage APIs"
-  ]
+  ],
+  "placement": "list",
+  "order": 4,
+  "summary": "Chrome extension that turns the current page into audio with an OpenAI model."
 }

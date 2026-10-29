@@ -23,5 +23,8 @@
     "HTTP API",
     "SSE",
     "Background workers"
-  ]
+  ],
+  "placement": "spotlight",
+  "order": 3,
+  "summary": "Two AI interview workflows: one interviews employees to surface workflow bottlenecks and automation opportunities, the other turns early product ideas into developer-ready specifications. Decisions, assumptions and requirements are recorded as it goes."
 }

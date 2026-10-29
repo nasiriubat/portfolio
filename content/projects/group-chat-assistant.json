@@ -23,5 +23,8 @@
     "Local embeddings",
     "Hybrid retrieval",
     "Configurable LLM providers"
-  ]
+  ],
+  "placement": "spotlight",
+  "order": 1,
+  "summary": "A multi-channel assistant for WhatsApp, Telegram, Discord and Slack that answers questions from group history with message-level citations. Hybrid vector and full-text search with reranking, decision records that track corrections, and per-group privacy, retention and cost controls."
 }

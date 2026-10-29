@@ -24,5 +24,8 @@
     "Pest",
     "PHPStan",
     "Docker"
-  ]
+  ],
+  "placement": "spotlight",
+  "order": 2,
+  "summary": "A self-hosted help desk that combines live chat, ticket management, a knowledge base, AI assistance and customer communication. Built as a Laravel product with an installation wizard, embeddable support widget, automations, reporting, privacy controls and deployment docs."
 }

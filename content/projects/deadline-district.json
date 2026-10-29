@@ -25,5 +25,8 @@
     "Colyseus",
     "Vitest",
     "Playwright"
-  ]
+  ],
+  "placement": "card",
+  "order": 1,
+  "summary": "A Three.js browser sniper game with procedurally seeded cities, contracts, ballistics, vehicles and weather, mobile controls, optional multiplayer and offline PWA support."
 }

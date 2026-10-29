@@ -19,5 +19,8 @@
     "JavaScript",
     "Chrome Extension APIs",
     "Browser DOM"
-  ]
+  ],
+  "placement": "card",
+  "order": 3,
+  "summary": "Detects and blurs API keys, passwords, emails and payment details before a screen share or recording. Hover to reveal for a moment."
 }

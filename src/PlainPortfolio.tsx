@@ -1,7 +1,7 @@
 import React, {useEffect,useMemo,useState} from 'react';
 import {ArrowDownRight,ArrowRight,ArrowUpRight,ExternalLink,Mail,MapPin,Linkedin,Github,Globe,BookOpen} from 'lucide-react';
 import {projects,publications,publicLink,type Project} from './content';
-import {experience,education,certifications,capabilities} from './PortfolioData';
+import {experience,education,certifications,capabilities,profile,asset} from './PortfolioData';
 import './plain.css';
 
 type Filter='All'|'AI & research'|'Products'|'Tools & experiments';
@@ -13,6 +13,7 @@ const classify=(p:Project):Exclude<Filter,'All'>=>{
   return 'Products';
 };
 const projectLink=(slug:string)=>import.meta.env.BASE_URL+'projects/'+slug+'/';
+const short=(p:Project)=>p.title.split(' — ')[0];
 
 function Heading({number,label,title,subtitle}:{number:string;label:string;title:string;subtitle?:string}){
  return <div className="plain-section-heading"><div className="plain-eyebrow"><span>{number}</span> {label}</div>
@@ -22,7 +23,7 @@ function PlainCard({p}:{p:Project}){
  const href=publicLink(p);
  return <article className="plain-project">
   <div className="plain-project-top"><span>{p.category}</span><ArrowUpRight size={20} aria-hidden="true"/></div>
-  <h3>{p.title}</h3><p>{p.description}</p>
+  <h3>{short(p)}</h3><p>{p.summary||p.description}</p>
   {p.stack&&p.stack.length>0&&<div className="plain-tags">{p.stack.slice(0,3).map(t=><span key={t}>{t}</span>)}</div>}
   <div className="plain-project-links"><a href={projectLink(p.slug)}>Case study <ArrowRight size={16}/></a>
    {href&&<a href={href} target="_blank" rel="noopener noreferrer">Live product <ExternalLink size={15}/></a>}</div>
@@ -37,17 +38,17 @@ export default function PlainPortfolio(){
   <section className="plain-hero plain-container">
    <div className="plain-availability"><span className="plain-availability-dot"/> FULL-STACK SOFTWARE DEVELOPER · AI RESEARCHER</div>
    <div className="plain-hero-body"><div><h1>Nasir Uddin<br/><span>Shuvo.</span></h1>
-    <p>Software engineer and researcher at GPT Lab, Tampere University. I build full-stack applications, AI tools and intelligent systems—and work to make them more reliable.</p>
+    <p>{profile.intro}</p>
     <div className="plain-hero-social" role="group" aria-label="Profile and contact links">
-     <a href="https://github.com/nasiriubat" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile"><Github size={19}/><span>GitHub</span></a>
-     <a href="https://www.linkedin.com/in/nasir-shuvo" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile"><Linkedin size={19}/><span>LinkedIn</span></a>
-     <a href="mailto:dev.nasirshuvo@gmail.com" aria-label="Send email"><Mail size={19}/><span>Email</span></a>
+     <a href={profile.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub profile"><Github size={19}/><span>GitHub</span></a>
+     <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile"><Linkedin size={19}/><span>LinkedIn</span></a>
+     <a href={'mailto:'+profile.email} aria-label="Send email"><Mail size={19}/><span>{profile.email}</span></a>
      <a href="https://scholarbro.com" target="_blank" rel="noopener noreferrer" aria-label="ScholarBro research platform"><Globe size={19}/><span>ScholarBro</span></a>
      <a href="#research" aria-label="Research and publications"><BookOpen size={19}/><span>Research</span></a>
     </div>
     <div className="plain-actions"><a href="#projects" className="plain-button">View my work <ArrowUpRight size={19}/></a>
-      <a className="plain-button-text" href="mailto:dev.nasirshuvo@gmail.com">Get in touch <ArrowUpRight size={18}/></a></div>
-   </div><div className="plain-hero-aside"><p>What I work on</p>{capabilities.map(c=><div key={c.number}><strong>{c.title}</strong><small>{c.details}</small></div>)}<span><MapPin size={15}/> Tampere, Finland</span></div></div>
+      <a className="plain-button-text" href={'mailto:'+profile.email}>Get in touch <ArrowUpRight size={18}/></a></div>
+   </div><div className="plain-hero-aside">{profile.photo&&<img className="plain-portrait" src={asset(profile.photo)} alt={'Portrait of '+profile.name}/>}<p>What I work on</p>{capabilities.map(c=><div key={c.number}><strong>{c.title}</strong><small>{c.details}</small></div>)}<span><MapPin size={15}/> {profile.location}</span></div></div>
    <div className="plain-hero-bottom"><span>RESEARCH & ENGINEERING / SELECTED WORK</span><a href="#projects">Explore below <ArrowDownRight size={16}/></a></div>
   </section>
 
@@ -76,18 +77,18 @@ export default function PlainPortfolio(){
 
   <section className="plain-section plain-education" id="education"><div className="plain-container">
    <Heading number="04" label="FOUNDATION" title="Education & continued learning."/>
-   <div className="plain-degree-grid">{education.map(e=><article key={e.institution}><span>{e.period}</span><h3>{e.degree}</h3><strong>{e.institution}</strong><p>{e.place} · {e.detail}</p></article>)}</div>
+   <div className="plain-degree-grid">{education.map(e=><article key={e.institution}><span>{e.period}</span><h3>{e.degree}</h3><strong>{e.institution}</strong><p>{e.place} · {e.detail}</p>{e.url&&<a className="plain-inline-link" href={e.url} target="_blank" rel="noopener noreferrer">{new URL(e.url).hostname.replace(/^www\./,'')} <ExternalLink size={14}/></a>}</article>)}</div>
    <h3 className="plain-subheading">Certifications & training</h3>
-   <div className="plain-cert-grid">{certifications.map((c,i)=><div key={c}><span>{String(i+1).padStart(2,'0')}</span><strong>{c}</strong></div>)}</div>
+   <div className="plain-cert-grid">{certifications.map((c,i)=><a key={c.title} href={c.url||undefined} target="_blank" rel="noopener noreferrer"><span>{String(i+1).padStart(2,'0')}</span><strong>{c.title}</strong>{c.issuer&&<small>{c.issuer}</small>}{c.url&&<em>View certificate <ExternalLink size={13}/></em>}</a>)}</div>
   </div></section>
 
   <section className="plain-contact" id="contact"><div className="plain-container">
    <div className="plain-eyebrow">05 / CONTACT</div><h2>Have something<br/><em>in mind?</em></h2>
    <p>For a product, technical collaboration, or research conversation, feel free to get in touch.</p>
-   <a href="mailto:dev.nasirshuvo@gmail.com" className="plain-button">Let's talk <Mail size={19}/></a>
-   <footer><span>© {new Date().getFullYear()} Nasir Uddin Shuvo</span>
-    <div><a href="https://github.com/nasiriubat" target="_blank" rel="noopener noreferrer">GitHub</a><a href="https://www.linkedin.com/in/nasir-shuvo" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-    <a href={import.meta.env.BASE_URL+'?view=story'}>Enter the story ↗</a></div></footer>
+   <a href={'mailto:'+profile.email} className="plain-button">{profile.email} <Mail size={19}/></a>
+   <footer><span>© {new Date().getFullYear()} {profile.name}</span>
+    <div><a href={profile.github} target="_blank" rel="noopener noreferrer">GitHub</a><a href={profile.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    <a href={import.meta.env.BASE_URL+'?view=story'}>Story view ↗</a></div></footer>
   </div></section>
  </main>;
 }

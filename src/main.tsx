@@ -13,17 +13,15 @@ const link=(view:'plain'|'story',hash='')=>base+'?view='+view+hash;
 function Navigation(){
   const [menu,setMenu]=useState(false);
   const plain=mode==='plain';
-  const sections=plain?[
-    {label:'Projects',id:'projects'},{label:'Research',id:'research'},{label:'Experience',id:'experience'},{label:'Contact',id:'contact'}
-  ]:[
-    {label:'Home',id:'home'},{label:'Education',id:'education'},{label:'Career',id:'experience'},{label:'Work',id:'projects'},{label:'Research',id:'research'},{label:'Services',id:'services'},{label:'Contact',id:'contact'}
+  const sections=[
+    {label:'Projects',id:'projects'},{label:'Research',id:'research'},{label:'Experience',id:'experience'},{label:'Education',id:'education'},{label:'Contact',id:'contact'}
   ];
   return <>
     <a className="skip-link" href="#projects">Skip to projects</a>
     <header className="global-header">
       <a href={link(mode)} className="identity-mark" aria-label="Nasir Uddin Shuvo — homepage">
         <span className="mark-letter">n<span>.</span></span>
-        <span className="mark-full">NASIR SHUVO</span>
+        <span className="mark-full">NASIR UDDIN SHUVO</span>
       </a>
       <nav className="global-links" aria-label="Main sections">
         {sections.map(s=><a key={s.id} href={'#'+s.id}>{s.label}</a>)}
@@ -46,7 +44,7 @@ function Navigation(){
 }
 function App(){
  return <div className={mode==='plain'?'experience-root plain-root':'experience-root story-root'}>
-   <Navigation/>
+   {mode==='plain'&&<Navigation/>}
    <Suspense fallback={<main className="experience-loading" role="status">Loading portfolio…</main>}>
      {mode==='plain'?<PlainPortfolio/>:<StoryPortfolio/>}
    </Suspense>

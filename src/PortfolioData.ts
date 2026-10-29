@@ -1,3 +1,7 @@
+// Profile, career, education, certifications and skills are edited in Pages CMS
+// ("Profile & career" → content/site.json). This module only gives them types.
+import site from '../content/site.json';
+
 export type CareerEntry = {
   role: string;
   organization: string;
@@ -6,66 +10,54 @@ export type CareerEntry = {
   summary: string;
   technologies: string[];
 };
-export const experience: CareerEntry[] = [
-  {
-    role: 'Project Researcher',
-    organization: 'GPT Lab · Tampere University',
-    location: 'Tampere, Finland',
-    period: 'Jan 2026 — Present',
-    summary: 'I research agentic workflows and long-term memory for AI systems. My work combines prototype development with reproducible evaluation of retrieval, learning and system reliability.',
-    technologies: ['AI agents', 'Long-term memory', 'RAG', 'Evaluation']
-  },
-  {
-    role: 'Research Assistant',
-    organization: 'GPT Lab · Tampere University',
-    location: 'Tampere, Finland',
-    period: 'Oct 2024 — Dec 2025',
-    summary: 'Built LLM-based tools and retrieval-augmented applications. Experimented with retrieval strategies, model orchestration and domain-specific research prototypes.',
-    technologies: ['Python', 'LangChain', 'React', 'LLMs']
-  },
-  {
-    role: 'Software Developer',
-    organization: 'AutonomyBD Ltd.',
-    location: 'Dhaka, Bangladesh',
-    period: 'Oct 2022 — Jun 2023',
-    summary: 'Developed and extended business applications, built REST APIs, delivered new functionality and collaborated closely with front-end engineers.',
-    technologies: ['Laravel', 'PHP', 'MySQL', 'Node.js']
-  },
-  {
-    role: 'Software Developer',
-    organization: 'Inilabs Network',
-    location: 'Dhaka, Bangladesh',
-    period: 'Feb 2021 — Sep 2022',
-    summary: 'Implemented customer-requested features, improved existing software, built APIs and provided ongoing application support and debugging.',
-    technologies: ['PHP', 'CodeIgniter', 'REST APIs', 'JavaScript']
-  }
-];
-export const education = [
-  {
-    degree: "Master's in Computing Sciences",
-    institution: 'Tampere University',
-    place: 'Tampere, Finland',
-    period: '2023 — 2025',
-    detail: 'Software, Web and Cloud'
-  },
-  {
-    degree: 'BSc in Computer Science & Engineering',
-    institution: 'IUBAT',
-    place: 'Dhaka, Bangladesh',
-    period: '2017 — 2021',
-    detail: 'CGPA 3.94 / 4.00'
-  }
-];
-export const certifications = [
-  'Full Stack (MERN) Bootcamp',
-  'Model Context Protocol: Advanced Topics',
-  'Introduction to Model Context Protocol',
-  'Claude Code 101',
-  'GenAI in Software Engineering · GPT Lab',
-  'SQL Intermediate · Sololearn'
-];
-export const capabilities = [
-  { number:'01',title:'Software products',details:'React, Laravel, Python and end-to-end applications',label:'Designing for real use' },
-  { number:'02',title:'Agentic systems',details:'Tools, retrieval, memory and multi-step reasoning',label:'Turning models into systems' },
-  { number:'03',title:'Applied research',details:'Evaluation, reliability and reproducible experiments',label:'Measuring what matters' }
-];
+export type EducationEntry = {
+  degree: string;
+  institution: string;
+  place: string;
+  period: string;
+  detail: string;
+  url?: string;
+};
+export type Certification = { title: string; issuer?: string; url?: string };
+export type Capability = { title: string; details: string };
+
+export type SiteProfile = {
+  name: string;
+  role: string;
+  location: string;
+  headline: string;
+  headlineAccent: string;
+  intro: string;
+  status: string;
+  photo: string;
+  email: string;
+  github: string;
+  linkedin: string;
+  researchTitle: string;
+  researchText: string;
+  contactTitle: string;
+  contactText: string;
+  capabilities: Capability[];
+  experience: CareerEntry[];
+  education: EducationEntry[];
+  certifications: Certification[];
+  skillsPrimary: string[];
+  skillsSecondary: string[];
+};
+
+export const profile = site as SiteProfile;
+export const experience: CareerEntry[] = profile.experience ?? [];
+export const education: EducationEntry[] = profile.education ?? [];
+export const certifications: Certification[] = profile.certifications ?? [];
+export const capabilities = (profile.capabilities ?? []).map((c, i) => ({
+  number: String(i + 1).padStart(2, '0'),
+  title: c.title,
+  details: c.details
+}));
+
+/** Resolve a CMS media path ("/images/x.webp") against the site base ("/portfolio/"). */
+export function asset(path: string | undefined): string {
+  if (!path) return '';
+  if (/^https?:\/\//.test(path)) return path;
+  return import.meta.env.BASE_URL + path.replace(/^\/+/, '');
+}

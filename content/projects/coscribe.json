@@ -25,5 +25,8 @@
     "arXiv",
     "Pandoc",
     "Tectonic"
-  ]
+  ],
+  "placement": "card",
+  "order": 6,
+  "summary": "A research writing workspace that interviews authors, drafts from verified sources with citation checks, and exports to PDF, DOCX or LaTeX."
 }

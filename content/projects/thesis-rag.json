@@ -23,5 +23,8 @@
     "SQLite",
     "OpenAI models",
     "Vector retrieval"
-  ]
+  ],
+  "placement": "list",
+  "order": 3,
+  "summary": "Document-grounded research assistant with cited answers, FAQ management and admin review of unanswered questions."
 }

@@ -68,12 +68,14 @@ for (const file of (await readdir(source)).filter(name => name.endsWith('.json')
   const workflow = arrayOfStrings(project.workflow);
   const technology = arrayOfStrings(project.stack);
   const link = (() => {
-    try {
-      const value = new URL(project.url);
-      return value.protocol === 'https:' && !value.hostname.endsWith('github.com') ? value.href : null;
-    } catch {
-      return null;
+    for (const candidate of [project.website, project.url]) {
+      try {
+        if (!candidate) continue;
+        const value = new URL(candidate);
+        if (value.protocol === 'https:' && !value.hostname.endsWith('github.com')) return value.href;
+      } catch { /* ignore malformed */ }
     }
+    return null;
   })();
 
   const sections = [];
@@ -90,7 +92,7 @@ for (const file of (await readdir(source)).filter(name => name.endsWith('.json')
 <meta property="og:type" content="article"/>
 <link rel="canonical" href="${location}"/>
 <style>${stylesheet}</style></head><body>
-<header class="masthead shell"><a class="brand" href="/portfolio/">nasir<span>.</span></a><a class="return" href="/portfolio/#projects">← All projects</a></header>
+<header class="masthead shell"><a class="brand" href="/portfolio/">Nasir Uddin Shuvo<span>.</span></a><a class="return" href="/portfolio/#work">← All projects</a></header>
 <main class="shell"><div class="hero"><div class="kicker">${escapeHtml(project.category || 'Selected work')}</div>
 <h1>${escapeHtml(project.title)}</h1><p class="dek">${escapeHtml(project.description)}</p>
 ${link ? `<a class="launch" href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer">Visit live product ↗</a>` : ''}
